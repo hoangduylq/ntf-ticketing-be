@@ -28,6 +28,7 @@
 
 ## Structure
 
+```bash
 .eslintrc.js
 │ .gitignore
 │ .prettierrc
@@ -92,6 +93,7 @@
 └───test
 app.e2e-spec.ts
 jest-e2e.json
+```
 
 ## Installation
 
