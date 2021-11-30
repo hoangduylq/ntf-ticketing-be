@@ -29,6 +29,7 @@
 ## Structure
 
 ```bash
+:.
 │   .eslintrc.js
 │   .gitignore
 │   .prettierrc
@@ -38,18 +39,18 @@
 │   README.md
 │   tsconfig.build.json
 │   tsconfig.json
-│
+│   
 ├───environments
 │       .env.development
 │       .env.production
-│
+│       
 ├───src
-│   │   app.controller.spec.ts
+│   │   app.controller.spec.ts     
 │   │   app.controller.ts
 │   │   app.module.ts
 │   │   app.service.ts
 │   │   main.ts
-│   │
+│   │   
 │   ├───config
 │   │       configuration.ts
 │   │
@@ -71,7 +72,7 @@
 │   │       │   ├───entities
 │   │       │   │       user.entity.ts
 │   │       │   │
-│   │       │   └───interface
+│   │       │   └───interfaces
 │   │       │           IUser.interface.ts
 │   │       │
 │   │       ├───dto
@@ -93,6 +94,7 @@
 └───test
         app.e2e-spec.ts
         jest-e2e.json
+
 ```
 
 ## Installation
