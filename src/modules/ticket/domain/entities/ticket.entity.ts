@@ -1,4 +1,4 @@
-import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
+import { EventEntity } from './../../../event/domain/entities/event.entity';
 import {
   BaseEntity,
   Column,

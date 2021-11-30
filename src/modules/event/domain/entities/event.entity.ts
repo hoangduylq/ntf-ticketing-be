@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { EventCategoryEntity } from './eventCategory.entity';
-import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
+import { UserEntity } from './../../../user/domain/entities/user.entity';
 
 @Entity({ name: 'Event' })
 export class EventEntity extends BaseEntity {

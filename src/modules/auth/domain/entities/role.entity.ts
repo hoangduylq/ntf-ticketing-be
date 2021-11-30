@@ -1,5 +1,5 @@
 import { RolePermissionEntity } from './rolePermission.entity';
-import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
+import { UserEntity } from './../../../user/domain/entities/user.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'Role' })

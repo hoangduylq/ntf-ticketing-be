@@ -1,5 +1,5 @@
-import { BankEntity } from 'src/modules/payment/domain/entities/bank.entity';
-import { UserEntity } from 'src/modules/user/domain/entities/user.entity';
+import { BankEntity } from './../../../payment/domain/entities/bank.entity';
+import { UserEntity } from './../../../user/domain/entities/user.entity';
 import {
   Column,
   Entity,

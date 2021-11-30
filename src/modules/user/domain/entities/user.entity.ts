@@ -9,9 +9,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { GenderEnum } from '../enums/gender.enum';
-import { RoleEntity } from 'src/modules/auth/domain/entities/role.entity';
-import { BankEntity } from 'src/modules/payment/domain/entities/bank.entity';
-import { OrderEntity } from 'src/modules/payment/domain/entities/order.entity';
+import { RoleEntity } from './../../../auth/domain/entities/role.entity';
+import { BankEntity } from './../../../payment/domain/entities/bank.entity';
+import { OrderEntity } from './../../..//payment/domain/entities/order.entity';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {
