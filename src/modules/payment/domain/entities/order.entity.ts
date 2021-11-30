@@ -7,7 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { StatusEnum } from './status.enum';
+import { StatusEnum } from '../enums/status.enum';
 
 @Entity({ name: 'Order' })
 export class OrderEntity {

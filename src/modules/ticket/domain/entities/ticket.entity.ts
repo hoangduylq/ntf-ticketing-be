@@ -7,7 +7,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { StatusEnum } from './status.enum';
+import { StatusEnum } from '../enums/status.enum';
 
 @Entity({ name: 'Ticket' })
 export class TicketEntity extends BaseEntity {

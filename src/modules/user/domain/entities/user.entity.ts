@@ -8,7 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { GenderEnum } from './gender.enum';
+import { GenderEnum } from '../enums/gender.enum';
 import { RoleEntity } from 'src/modules/auth/domain/entities/role.entity';
 import { BankEntity } from 'src/modules/payment/domain/entities/bank.entity';
 import { OrderEntity } from 'src/modules/payment/domain/entities/order.entity';

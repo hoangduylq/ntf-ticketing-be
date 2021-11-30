@@ -1,4 +1,4 @@
-import { StatusEnum } from './status.enum';
+import { StatusEnum } from '../enums/status.enum';
 import {
   BaseEntity,
   Column,
