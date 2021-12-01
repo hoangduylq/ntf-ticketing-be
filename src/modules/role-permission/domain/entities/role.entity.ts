@@ -1,14 +1,20 @@
 import { RolePermissionEntity } from './rolePermission.entity';
-import { UserEntity } from './../../../user/domain/entities/user.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from '../../../user/domain/entities/user.entity';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'Role' })
-export class RoleEntity {
+export class RoleEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
-  name: string;
+  name!: string;
 
   @OneToMany(() => UserEntity, (user) => user.role)
   users: UserEntity[];
