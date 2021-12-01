@@ -20,9 +20,6 @@ export class TicketEntity extends BaseEntity {
   @JoinColumn()
   event: EventEntity;
 
-  @Column({ nullable: false })
-  orderId!: number;
-
   @Column({
     type: 'enum',
     enum: StatusEnum,

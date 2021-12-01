@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { GenderEnum } from '../enums/gender.enum';
-import { RoleEntity } from './../../../auth/domain/entities/role.entity';
+import { RoleEntity } from '../../../role-permission/domain/entities/role.entity';
 import { BankEntity } from './../../../payment/domain/entities/bank.entity';
 import { OrderEntity } from './../../../payment/domain/entities/order.entity';
 
@@ -55,7 +55,7 @@ export class UserEntity extends BaseEntity {
   isSocial!: boolean;
 
   @Column({ nullable: true, type: 'boolean', default: false })
-  isDelete?: boolean;
+  isDeleted?: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

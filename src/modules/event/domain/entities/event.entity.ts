@@ -13,6 +13,7 @@ import {
 import { EventCategoryEntity } from './eventCategory.entity';
 import { UserEntity } from './../../../user/domain/entities/user.entity';
 import { TicketEntity } from 'src/modules/ticket/domain/entities/ticket.entity';
+import { OrderEntity } from 'src/modules/payment/domain/entities/order.entity';
 
 @Entity({ name: 'Event' })
 export class EventEntity extends BaseEntity {
@@ -105,4 +106,7 @@ export class EventEntity extends BaseEntity {
 
   @OneToMany(() => TicketEntity, (ticket) => ticket.event)
   tickets: TicketEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.event)
+  orders: OrderEntity[];
 }

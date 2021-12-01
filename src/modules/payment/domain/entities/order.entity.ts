@@ -10,15 +10,30 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { StatusEnum } from '../enums/status.enum';
+import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
 
 @Entity({ name: 'Order' })
 export class OrderEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @ManyToOne(() => EventEntity, (event) => event.id)
+  @JoinColumn()
+  event: EventEntity;
+
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn()
   user: UserEntity;
+
+  @ManyToOne(() => BankEntity, (bank) => bank.id)
+  @JoinColumn()
+  bank: BankEntity;
+
+  @Column({ nullable: false, type: 'float' })
+  amount!: number;
+
+  @Column('simple-array')
+  tickets: string[];
 
   @Column({
     type: 'enum',
@@ -29,13 +44,6 @@ export class OrderEntity extends BaseEntity {
 
   @CreateDateColumn()
   orderDate: Date;
-
-  @Column({ nullable: false, type: 'float' })
-  amount!: number;
-
-  @ManyToOne(() => BankEntity, (bank) => bank.id)
-  @JoinColumn()
-  bank: BankEntity;
 
   @Column({ nullable: true, type: 'date' })
   paymentDate?: string;

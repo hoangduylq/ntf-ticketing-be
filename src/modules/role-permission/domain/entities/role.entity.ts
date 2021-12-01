@@ -1,5 +1,5 @@
 import { RolePermissionEntity } from './rolePermission.entity';
-import { UserEntity } from './../../../user/domain/entities/user.entity';
+import { UserEntity } from '../../../user/domain/entities/user.entity';
 import {
   BaseEntity,
   Column,
