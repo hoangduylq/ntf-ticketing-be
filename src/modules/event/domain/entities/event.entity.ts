@@ -2,18 +2,23 @@ import { StatusEnum } from '../enums/status.enum';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { EventCategoryEntity } from './eventCategory.entity';
 import { UserEntity } from './../../../user/domain/entities/user.entity';
+import { TicketEntity } from 'src/modules/ticket/domain/entities/ticket.entity';
+import { OrderEntity } from 'src/modules/payment/domain/entities/order.entity';
 
 @Entity({ name: 'Event' })
 export class EventEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @ManyToOne(() => EventCategoryEntity, (category) => category.id)
   @JoinColumn()
@@ -24,77 +29,84 @@ export class EventEntity extends BaseEntity {
   user: UserEntity;
 
   @Column({ nullable: false, length: 200, type: 'varchar' })
-  name: string;
+  name!: string;
+
+  @Column({ nullable: true, type: 'text' })
+  logoUrl?: string;
+
+  @Column({ nullable: true, type: 'text' })
+  bannerUrl?: string;
 
   @Column({ nullable: true, type: 'varchar' })
-  logoUrl: string;
+  description?: string;
 
   @Column({ nullable: true, type: 'varchar' })
-  bannerUrl: string;
+  eventPlaceName?: string;
 
   @Column({ nullable: true, type: 'varchar' })
-  description: string;
-
-  @Column({ nullable: true, type: 'varchar' })
-  eventPlaceName: string;
-
-  @Column({ nullable: true, type: 'varchar' })
-  eventAddress: string;
+  eventAddress?: string;
 
   @Column({ nullable: true, type: 'date' })
-  saleStartDate: string;
+  saleStartDate?: string;
 
   @Column({ nullable: true, type: 'date' })
-  saleEndDate: string;
+  saleEndDate?: string;
 
   @Column({ nullable: true, type: 'date' })
-  eventStartDate: string;
+  eventStartDate?: string;
 
   @Column({ nullable: true, type: 'date' })
-  eventEndDate: string;
+  eventEndDate?: string;
 
-  @Column({ nullable: false })
-  totalTickets: number;
+  @Column({ nullable: false, type: 'integer' })
+  totalTickets!: number;
 
-  @Column({ nullable: false })
-  availableTickets: number;
+  @Column({ nullable: false, type: 'integer' })
+  availableTickets!: number;
 
-  @Column({ nullable: true, type: 'varchar' })
-  ticketImageUrl: string;
+  @Column({ nullable: true, type: 'text' })
+  ticketImageUrl?: string;
 
   @Column({ nullable: false, type: 'float' })
-  ticketPrice: number;
+  ticketPrice!: number;
 
-  @Column({ nullable: false })
-  maxTicketOrder: number;
+  @Column({ nullable: false, type: 'integer' })
+  maxTicketOrder!: number;
 
-  @Column({ nullable: false })
-  minTicketOrder: number;
+  @Column({ nullable: false, type: 'integer' })
+  minTicketOrder!: number;
 
-  @Column({ nullable: true, length: 255, type: 'varchar' })
-  organizationInfo: string;
+  @Column({ nullable: true, type: 'varchar' })
+  organizationInfo?: string;
 
-  @Column({ nullable: true, length: 255, type: 'varchar' })
-  organizationEmail: string;
+  @Column({ nullable: true, type: 'varchar' })
+  organizationEmail?: string;
 
   @Column({ nullable: true, length: 11, type: 'varchar' })
-  organizationPhone: string;
+  organizationPhone?: string;
 
-  @Column({ nullable: true, length: 255, type: 'varchar' })
-  organizationAddress: string;
+  @Column({ nullable: true, type: 'varchar' })
+  organizationAddress?: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: false, type: 'boolean' })
   isDeleted: boolean;
 
   @Column({
     type: 'enum',
     enum: StatusEnum,
+    default: StatusEnum.Ready,
   })
   status: StatusEnum;
 
-  @Column({ nullable: true, type: 'date' })
-  createdAt: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column({ nullable: true, type: 'date' })
-  updatedAt: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @OneToMany(() => TicketEntity, (ticket) => ticket.event)
+  tickets: TicketEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.event)
+  orders: OrderEntity[];
 }

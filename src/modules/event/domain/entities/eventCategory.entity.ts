@@ -1,13 +1,19 @@
 import { EventEntity } from './event.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'EventCategory' })
-export class EventCategoryEntity {
+export class EventCategoryEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
-  @Column({ nullable: false, length: 255, type: 'varchar' })
-  name: string;
+  @Column({ nullable: false, type: 'varchar' })
+  name!: string;
 
   @OneToMany(() => EventEntity, (event) => event.category)
   events: EventEntity[];
