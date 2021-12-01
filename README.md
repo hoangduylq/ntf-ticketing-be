@@ -29,70 +29,72 @@
 ## Structure
 
 ```bash
-.eslintrc.js
-│ .gitignore
-│ .prettierrc
-│ nest-cli.json
-│ package-lock.json
-│ package.json
-│ README.md
-│ tsconfig.build.json
-│ tsconfig.json
-│
+:.
+│   .eslintrc.js
+│   .gitignore
+│   .prettierrc
+│   nest-cli.json
+│   package-lock.json
+│   package.json
+│   README.md
+│   tsconfig.build.json
+│   tsconfig.json
+│   
 ├───environments
-│ .env.development
-│ .env.production
-│
+│       .env.development
+│       .env.production
+│       
 ├───src
-│ │ app.controller.spec.ts
-│ │ app.controller.ts
-│ │ app.module.ts
-│ │ app.service.ts
-│ │ main.ts
-│ │
-│ ├───config
-│ │ configuration.ts
-│ │
-│ ├───interceptors
-│ │ transform.interceptor.ts
-│ │
-│ ├───modules
-│ │ ├───auth
-│ │ │ └───controller
-│ │ │ auth.controller.ts
-│ │ │
-│ │ └───user
-│ │ │ user.module.ts
-│ │ │
-│ │ ├───controller
-│ │ │ user.controller.ts
-│ │ │
-│ │ ├───domain
-│ │ │ ├───entities
-│ │ │ │ user.entity.ts
-│ │ │ │
-│ │ │ ├───interface
-│ │ │ │ IUser.interface.ts
-│ │ │ │
-│ │ │ └───service
-│ │ │ user.service.ts
-│ │ │
-│ │ ├───dto
-│ │ │ create-user.dto.ts
-│ │ │
-│ │ └───infrastructure
-│ │ user.repository.ts
-│ │
-│ └───share
-│ │ constant.ts
-│ │ error-code.ts
-│ │
-│ └───repository
-│ IRepository.interface.ts
+│   │   app.controller.spec.ts     
+│   │   app.controller.ts
+│   │   app.module.ts
+│   │   app.service.ts
+│   │   main.ts
+│   │   
+│   ├───config
+│   │       configuration.ts
+│   │
+│   ├───interceptors
+│   │       transform.interceptor.ts
+│   │
+│   ├───modules
+│   │   ├───auth
+│   │   │   └───controller
+│   │   │           auth.controller.ts
+│   │   │
+│   │   └───user
+│   │       │   user.module.ts
+│   │       │
+│   │       ├───controller
+│   │       │       user.controller.ts
+│   │       │
+│   │       ├───domain
+│   │       │   ├───entities
+│   │       │   │       user.entity.ts
+│   │       │   │
+│   │       │   └───interfaces
+│   │       │           IUser.interface.ts
+│   │       │
+│   │       ├───dto
+│   │       │       create-user.dto.ts
+│   │       │
+│   │       ├───infrastructure
+│   │       │       user.repository.ts
+│   │       │
+│   │       └───service
+│   │               user.service.ts
+│   │
+│   └───share
+│       │   constant.ts
+│       │   error-code.ts
+│       │
+│       └───repository
+│               IRepository.interface.ts
 │
 └───test
-app.e2e-spec.ts
-jest-e2e.json
+        app.e2e-spec.ts
+        jest-e2e.json
+
 ```
 
 ## Installation

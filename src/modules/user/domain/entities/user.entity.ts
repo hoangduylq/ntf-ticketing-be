@@ -2,64 +2,66 @@ import { EventEntity } from './../../../event/domain/entities/event.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { GenderEnum } from './gender.enum';
-import { RoleEntity } from 'src/modules/auth/domain/entities/role.entity';
-import { BankEntity } from 'src/modules/payment/domain/entities/bank.entity';
-import { OrderEntity } from 'src/modules/payment/domain/entities/order.entity';
+import { GenderEnum } from '../enums/gender.enum';
+import { RoleEntity } from '../../../role-permission/domain/entities/role.entity';
+import { BankEntity } from './../../../payment/domain/entities/bank.entity';
+import { OrderEntity } from './../../../payment/domain/entities/order.entity';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ nullable: true, length: 100, type: 'varchar' })
-  name: string;
+  id!: number;
 
   @Column({ nullable: false, length: 100, type: 'varchar' })
-  email: string;
+  name!: string;
+
+  @Column({ nullable: false, length: 100, type: 'varchar' })
+  email!: string;
 
   @Column({ nullable: false, length: 20, type: 'varchar' })
-  username: string;
+  username!: string;
 
   @Column({ nullable: false, type: 'varchar' })
-  password: string;
+  password!: string;
 
   @Column({ nullable: true, type: 'date' })
-  birthday: string;
+  birthday?: string;
 
   @Column({ nullable: true, length: 11, type: 'varchar' })
-  numberPhone: string;
+  numberPhone?: string;
 
   @Column({
     type: 'enum',
     enum: GenderEnum,
   })
-  gender: GenderEnum;
+  gender?: GenderEnum;
 
-  @Column({ nullable: true, type: 'varchar' })
-  avatar: string;
+  @Column({ nullable: true, type: 'text' })
+  avatar?: string;
 
   @ManyToOne(() => RoleEntity, (role) => role.id)
   @JoinColumn()
   role: RoleEntity;
 
-  @Column({ nullable: true })
-  isSocial: boolean;
+  @Column({ nullable: false, type: 'boolean', default: false })
+  isSocial!: boolean;
 
-  @Column({ nullable: true })
-  isDelete: boolean;
+  @Column({ nullable: true, type: 'boolean', default: false })
+  isDeleted?: boolean;
 
-  @Column({ nullable: true, type: 'date' })
-  createdAt: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column({ nullable: true, type: 'date' })
-  updatedAt: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @OneToMany(() => EventEntity, (event) => event.user)
   events: EventEntity[];

@@ -1,38 +1,38 @@
-import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
+import { EventEntity } from './../../../event/domain/entities/event.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { StatusEnum } from './status.enum';
+import { StatusEnum } from '../enums/status.enum';
 
 @Entity({ name: 'Ticket' })
 export class TicketEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
-  @OneToOne(() => EventEntity)
+  @ManyToOne(() => EventEntity, (event) => event.id)
   @JoinColumn()
   event: EventEntity;
-
-  @Column({ nullable: false })
-  orderId: number;
 
   @Column({
     type: 'enum',
     enum: StatusEnum,
+    default: StatusEnum.Ready,
   })
-  gender: StatusEnum;
+  status: StatusEnum;
 
-  @Column({ nullable: false, type: 'varchar' })
-  nftToken: string;
+  @Column({ nullable: true, type: 'varchar' })
+  nftToken?: string;
 
-  @Column({ nullable: true, type: 'date' })
-  createdAt: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column({ nullable: true, type: 'date' })
-  updatedAt: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
