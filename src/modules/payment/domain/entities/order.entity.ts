@@ -8,6 +8,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { StatusEnum } from '../enums/status.enum';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
@@ -42,9 +43,12 @@ export class OrderEntity extends BaseEntity {
   })
   status!: StatusEnum;
 
-  @CreateDateColumn()
-  orderDate: Date;
-
   @Column({ nullable: true, type: 'date' })
   paymentDate?: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
