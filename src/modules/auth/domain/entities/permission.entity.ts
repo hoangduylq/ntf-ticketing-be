@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'Permission' })
-export class PermissionEntity {
+export class PermissionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
-  @Column({ nullable: false, type: 'varchar', length: 255 })
-  name: string;
+  @Column({ nullable: false, type: 'varchar' })
+  name!: string;
 }
