@@ -1,3 +1,4 @@
+import { RolePermissionModule } from './modules/role-permission/role-permission.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { Module } from '@nestjs/common';
@@ -31,6 +32,7 @@ import { join } from 'path';
     }),
     AuthModule,
     UserModule,
+    RolePermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

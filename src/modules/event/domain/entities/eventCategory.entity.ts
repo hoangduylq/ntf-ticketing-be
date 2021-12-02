@@ -9,7 +9,7 @@ import {
 
 @Entity({ name: 'EventCategory' })
 export class EventCategoryEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: number;
 
   @Column({ nullable: false, type: 'varchar' })

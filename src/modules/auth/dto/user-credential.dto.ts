@@ -1,6 +1,12 @@
+import { GenderEnum } from './../../user/domain/enums/gender.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, MinLength, Matches } from 'class-validator';
-export class UserLoginDto {
+import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
+
+export class UserCredentialsDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
   @ApiProperty()
   @IsEmail()
   @IsNotEmpty()
@@ -13,4 +19,8 @@ export class UserLoginDto {
     message: 'Password is too weak',
   })
   password: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  gender: GenderEnum;
 }

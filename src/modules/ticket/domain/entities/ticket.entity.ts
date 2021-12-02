@@ -13,7 +13,7 @@ import { StatusEnum } from '../enums/status.enum';
 
 @Entity({ name: 'Ticket' })
 export class TicketEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: number;
 
   @ManyToOne(() => EventEntity, (event) => event.id)

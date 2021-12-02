@@ -7,14 +7,14 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UserService,
-    private jwtService: JwtService,
+    private readonly usersService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
   //generate token
   async login(userLogin: UserLoginDto): Promise<{ accessToken: string }> {
     const { email, password } = userLogin;
-    const user = await this.usersService.findUser(email);
+    const user = await this.usersService.findUserByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = {
         username: user.username,

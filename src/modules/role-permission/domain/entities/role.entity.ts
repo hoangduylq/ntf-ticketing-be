@@ -10,7 +10,7 @@ import {
 
 @Entity({ name: 'Role' })
 export class RoleEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: number;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
