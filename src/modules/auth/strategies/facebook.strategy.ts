@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-facebook';
-import { URL_APP_CLIENT } from './../../../shared/constant';
 
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
@@ -9,7 +8,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     super({
       clientID: process.env.FB_APP_ID,
       clientSecret: process.env.FB_APP_SECRET,
-      callbackURL: `${URL_APP_CLIENT}facebook/redirect`,
+      callbackURL: process.env.URL_REDIRECT,
       scope: 'email',
       profileField: ['emails', 'name'],
     });
