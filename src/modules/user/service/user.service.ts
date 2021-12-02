@@ -14,7 +14,12 @@ export class UserService {
     private roleService: RoleService,
   ) {}
 
-  async signout(userCredential: UserCredentialsDto): Promise<any> {
+  async findUserByEmail(email: string): Promise<any> {
+    const user = this.usersRespository.findOne({ email });
+    return user;
+  }
+
+  async signup(userCredential: UserCredentialsDto): Promise<any> {
     const { email, name, gender } = userCredential;
     const isInvalidUser = await this.findUserByEmail(email);
     if (isInvalidUser) {
@@ -40,10 +45,5 @@ export class UserService {
       role: result.role,
     };
     return dto;
-  }
-
-  async findUserByEmail(email: string): Promise<any> {
-    const user = this.usersRespository.findOne({ email });
-    return user;
   }
 }

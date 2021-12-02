@@ -11,6 +11,6 @@ export class UserController {
   @Post('signup')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signup(@Request() req, @Body() model: UserCredentialsDto) {
-    return this.userService.signout(req.body);
+    return this.userService.signup(req.body);
   }
 }
