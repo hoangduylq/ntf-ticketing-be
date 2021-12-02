@@ -15,7 +15,7 @@ import { AuthService } from './services/auth.service';
     UserModule,
     RolePermissionModule,
     JwtModule.register({
-      secret: 'gq46xr787i',
+      secret: process.env.JWT_CONSTANT_SECRET_KEY,
       signOptions: { expiresIn: '1d' },
     }),
   ],
