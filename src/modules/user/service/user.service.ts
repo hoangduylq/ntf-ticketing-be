@@ -20,7 +20,7 @@ export class UserService {
   }
 
   async signup(userCredential: UserCredentialsDto): Promise<any> {
-    const { email, name, gender } = userCredential;
+    const { email, name, gender, password } = userCredential;
     const isInvalidUser = await this.findUserByEmail(email);
     if (isInvalidUser) {
       throw new ConflictException('Email already exists');
@@ -36,7 +36,7 @@ export class UserService {
       gender: gender,
     });
 
-    newUser.password = bcrypt.hashSync(userCredential.password, 10);
+    newUser.password = bcrypt.hashSync(password, 10);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const result = await this.usersRespository.save(newUser);
     const dto: UserDto = {
