@@ -1,10 +1,10 @@
-import { UserDto } from './../../auth/dto/user.dto';
 import { RoleService } from './../../role-permission/service/role.service';
 import { UsersRepository } from './../infrastructure/user.repository';
-import { UserCredentialsDto } from 'src/modules/auth/dto/user-credential.dto';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { UserCredentialsDto } from '../dto/user-credential.dto';
+import { UserDto } from '../dto/user.dto';
 
 @Injectable()
 export class UserService {
