@@ -9,6 +9,8 @@ import { UserService } from '../user/service/user.service';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './service/auth.service';
+import { RolePermissionModule } from './../role-permission/role-permission.module';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -33,8 +35,9 @@ import { AuthService } from './service/auth.service';
     ConfigModule,
     UserModule,
     PassportModule,
+    RolePermissionModule,
   ],
-  providers: [AuthService, UserService],
+  providers: [AuthService, UserService, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

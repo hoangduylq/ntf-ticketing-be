@@ -10,7 +10,7 @@ import {
 
 @Entity({ name: 'Wallet' })
 export class WalletEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: number;
 
   @OneToOne(() => UserEntity)

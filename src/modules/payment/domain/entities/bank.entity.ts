@@ -12,7 +12,7 @@ import { OrderEntity } from './order.entity';
 
 @Entity({ name: 'Bank' })
 export class BankEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: number;
 
   @Column({ nullable: false, type: 'varchar' })

@@ -17,7 +17,7 @@ import { OrderEntity } from './../../../payment/domain/entities/order.entity';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: number;
 
   @Column({ nullable: false, length: 100, type: 'varchar' })
