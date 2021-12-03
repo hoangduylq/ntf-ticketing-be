@@ -26,11 +26,11 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: false, length: 100, type: 'varchar' })
   email!: string;
 
-  @Column({ nullable: false, length: 20, type: 'varchar' })
+  @Column({ nullable: false, length: 100, type: 'varchar' })
   username!: string;
 
-  @Column({ nullable: false, type: 'varchar' })
-  password!: string;
+  @Column({ nullable: true, type: 'varchar' })
+  password?: string;
 
   @Column({ nullable: true, type: 'date' })
   birthday?: string;
