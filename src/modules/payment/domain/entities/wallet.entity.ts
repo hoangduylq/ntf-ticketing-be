@@ -11,7 +11,7 @@ import {
 @Entity({ name: 'Wallet' })
 export class WalletEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @OneToOne(() => UserEntity)
   @JoinColumn()

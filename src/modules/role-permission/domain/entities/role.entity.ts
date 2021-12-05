@@ -1,5 +1,5 @@
 import { RolePermissionEntity } from './rolePermission.entity';
-import { UserEntity } from '../../../user/domain/entities/user.entity';
+import { UserEntity } from './../../../user/domain/entities/user.entity';
 import {
   BaseEntity,
   Column,
@@ -11,7 +11,7 @@ import {
 @Entity({ name: 'Role' })
 export class RoleEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   name!: string;

@@ -1,5 +1,5 @@
-import { RoleService } from './../../role-permission/service/role.service';
-import { UsersRepository } from './../infrastructure/user.repository';
+import { RoleService } from '../../role-permission/services/role.service';
+import { UsersRepository } from '../infrastructure/user.repository';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -25,12 +25,14 @@ export class UserService {
       return user;
     }
 
+    const role = await this.roleService.findRole('User');
+
     const newUser = this.usersRespository.create({
       email: profile.email,
       username: profile.id,
       name: profile.name,
+      role: role,
       isSocial: true,
-      avatar: profile.photos[0].value,
     });
     const result = await this.usersRespository.save(newUser);
     const dto: UserDto = {

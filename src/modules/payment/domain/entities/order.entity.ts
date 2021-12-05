@@ -16,7 +16,7 @@ import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
 @Entity({ name: 'Order' })
 export class OrderEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @ManyToOne(() => EventEntity, (event) => event.id)
   @JoinColumn()

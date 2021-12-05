@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthService } from '../service/auth.service';
+import { AuthService } from '../services/auth.service';
 import { UserLoginDto } from 'src/modules/user/dto/user-login.dto';
 @Controller('auth')
 @ApiTags('auth')

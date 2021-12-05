@@ -11,14 +11,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { GenderEnum } from '../enums/gender.enum';
-import { RoleEntity } from '../../../role-permission/domain/entities/role.entity';
+import { RoleEntity } from './../../../role-permission/domain/entities/role.entity';
 import { BankEntity } from './../../../payment/domain/entities/bank.entity';
 import { OrderEntity } from './../../../payment/domain/entities/order.entity';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @Column({ nullable: false, length: 100, type: 'varchar' })
   name!: string;
@@ -49,7 +49,7 @@ export class UserEntity extends BaseEntity {
 
   @ManyToOne(() => RoleEntity, (role) => role.id)
   @JoinColumn()
-  role: RoleEntity;
+  role!: RoleEntity;
 
   @Column({ nullable: false, type: 'boolean', default: false })
   isSocial!: boolean;
