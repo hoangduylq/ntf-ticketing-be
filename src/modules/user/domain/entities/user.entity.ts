@@ -39,6 +39,7 @@ export class UserEntity extends BaseEntity {
   numberPhone?: string;
 
   @Column({
+    nullable: true,
     type: 'enum',
     enum: GenderEnum,
   })

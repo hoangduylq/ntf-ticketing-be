@@ -3,6 +3,9 @@
 /node_modules
 /src/secrets
 
+environments/.env.development
+environments/.env.production
+
 # Logs
 logs
 *.log
