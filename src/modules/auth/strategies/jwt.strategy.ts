@@ -5,7 +5,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Role } from '../decorator/role.decorator';
 
-interface IJwtPayload {
+export interface IJwtPayload {
   id: string | number;
   username: string;
   name: string;

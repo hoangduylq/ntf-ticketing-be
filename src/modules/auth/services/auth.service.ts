@@ -1,3 +1,4 @@
+import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
   HttpException,
   Injectable,
@@ -22,13 +23,7 @@ export class AuthService {
     const { email, password } = userLogin;
     const user = await this.usersService.findUserByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = {
-        username: user.username,
-        id: user.id,
-        email: user.email,
-        name: user.name,
-      };
-      const accessToken: string = await this.jwtService.sign(payload);
+      const accessToken = await this.generateToken(user);
       return { accessToken };
     } else {
       throw new UnauthorizedException('Please check your email or password');
@@ -46,13 +41,7 @@ export class AuthService {
 
       if (user) {
         const internalUser = await this.usersService.findOrCreate(user);
-        const payload = {
-          username: internalUser.username,
-          id: internalUser.id,
-          email: internalUser.email,
-          name: internalUser.name,
-        };
-        const accessToken: string = await this.jwtService.sign(payload);
+        const accessToken = await this.generateToken(internalUser);
         return { accessToken };
       }
     } catch (error) {
@@ -61,5 +50,17 @@ export class AuthService {
       }
       throw new UnauthorizedException('Invalid access token');
     }
+  }
+
+  async generateToken(user: UserEntity): Promise<string> {
+    const payload = {
+      username: user.username,
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role.name,
+    };
+    const accessToken: string = await this.jwtService.sign(payload);
+    return accessToken;
   }
 }
