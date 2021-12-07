@@ -1,7 +1,7 @@
 import { RolePermissionModule } from './../role-permission/role-permission.module';
 import { UsersRepository } from './infrastructure/user.repository';
 import { UserController } from './controllers/user.controller';
-import { UserService } from './service/user.service';
+import { UserService } from './services/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 

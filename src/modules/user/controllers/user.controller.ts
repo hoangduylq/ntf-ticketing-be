@@ -1,4 +1,4 @@
-import { UserService } from 'src/modules/user/service/user.service';
+import { UserService } from 'src/modules/user/services/user.service';
 import { Body, Controller, Post, Request } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserCredentialsDto } from '../dto/user-credential.dto';

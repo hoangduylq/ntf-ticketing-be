@@ -1,14 +1,20 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/modules/user/service/user.service';
+import { UserService } from './../../user/services/user.service';
 import * as bcrypt from 'bcrypt';
-import { UserLoginDto } from 'src/modules/user/dto/user-login.dto';
+import { UserLoginDto } from './../../user/dto/user-login.dto';
+import { FacebookAuthService } from 'facebook-auth-nestjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
+    private readonly facebookService: FacebookAuthService,
   ) {}
 
   //generate token
@@ -26,6 +32,34 @@ export class AuthService {
       return { accessToken };
     } else {
       throw new UnauthorizedException('Please check your email or password');
+    }
+  }
+
+  async loginWithFacebook(accessToken: string) {
+    try {
+      const user = await this.facebookService.getUser(
+        accessToken,
+        'id',
+        'name',
+        'email',
+      );
+
+      if (user) {
+        const internalUser = await this.usersService.findOrCreate(user);
+        const payload = {
+          username: internalUser.username,
+          id: internalUser.id,
+          email: internalUser.email,
+          name: internalUser.name,
+        };
+        const accessToken: string = await this.jwtService.sign(payload);
+        return { accessToken };
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid access token');
     }
   }
 }

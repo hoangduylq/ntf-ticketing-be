@@ -9,4 +9,12 @@ export default () => ({
     sync: process.env.DATABASE_SYNC === 'true',
     ssl: process.env.DATABASE_SSL === 'true',
   },
+  authFacebook: {
+    app_id: process.env.FB_APP_ID,
+    app_secret: process.env.FB_APP_SECRET,
+  },
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+  accessTokenExpiration: process.env.ACCESS_TOKEN_EXPIRATION,
+  refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+  refreshTokenExpiration: process.env.REFRESH_TOKEN_EXPIRATION,
 });

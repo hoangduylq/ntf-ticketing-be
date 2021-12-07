@@ -10,7 +10,7 @@ import {
 @Entity({ name: 'EventCategory' })
 export class EventCategoryEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @Column({ nullable: false, type: 'varchar' })
   name!: string;

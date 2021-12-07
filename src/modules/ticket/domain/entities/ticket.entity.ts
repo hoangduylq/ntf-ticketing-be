@@ -14,7 +14,7 @@ import { StatusEnum } from '../enums/status.enum';
 @Entity({ name: 'Ticket' })
 export class TicketEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @ManyToOne(() => EventEntity, (event) => event.id)
   @JoinColumn()

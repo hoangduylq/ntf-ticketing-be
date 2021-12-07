@@ -1,5 +1,5 @@
-import { RoleService } from './../../role-permission/service/role.service';
-import { UsersRepository } from './../infrastructure/user.repository';
+import { RoleService } from '../../role-permission/services/role.service';
+import { UsersRepository } from '../infrastructure/user.repository';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -17,6 +17,31 @@ export class UserService {
   async findUserByEmail(email: string): Promise<any> {
     const user = this.usersRespository.findOne({ email });
     return user;
+  }
+
+  async findOrCreate(profile): Promise<any> {
+    const user = await this.usersRespository.findOne({ email: profile.email });
+    if (user) {
+      return user;
+    }
+
+    const role = await this.roleService.findRole('User');
+
+    const newUser = this.usersRespository.create({
+      email: profile.email,
+      username: profile.id,
+      name: profile.name,
+      role: role,
+      isSocial: true,
+    });
+    const result = await this.usersRespository.save(newUser);
+    const dto: UserDto = {
+      email: result.email,
+      name: result.name,
+      role: result.role,
+      isSocial: result.isSocial,
+    };
+    return dto;
   }
 
   async signup(userCredential: UserCredentialsDto): Promise<any> {
@@ -43,7 +68,12 @@ export class UserService {
       email: result.email,
       name: result.name,
       role: result.role,
+      isSocial: result.isSocial,
     };
     return dto;
+  }
+
+  async getUserById(id: string | number) {
+    return this.usersRespository.findOne(id);
   }
 }

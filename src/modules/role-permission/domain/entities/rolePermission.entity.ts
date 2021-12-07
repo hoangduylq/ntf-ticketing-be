@@ -11,7 +11,7 @@ import { RoleEntity } from './role.entity';
 @Entity({ name: 'RolePermission' })
 export class RolePermissionEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @ManyToOne(() => RoleEntity, (role) => role.id)
   @JoinColumn()
