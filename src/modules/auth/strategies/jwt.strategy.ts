@@ -29,8 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: IJwtPayload) {
     const user = this.userService.getUserById(payload.id);
 
-    // mot bat exception o day
-    // lam them 1 cai exception filter hay pipe gi do de handle loi
     if (!user) {
       return false;
     }

@@ -20,14 +20,11 @@ export class RolesGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
 
-    // mang rong van qua dc cai check nay, them length vao cho an toan
     if (!requiredRoles.length) {
       return true;
     }
 
-    // cho nay lay user tu request ra luon
     const request = context.switchToHttp().getRequest();
-    // thich thi thay interface user o day
     const userData: UserEntity = request.user;
     const userRole = userData.role.name;
 
