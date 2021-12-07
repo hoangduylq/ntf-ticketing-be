@@ -1,15 +1,7 @@
 # compiled output
 /dist
 /node_modules
-<<<<<<< HEAD
 /environments
-=======
-/src/secrets
-
-environments/.env.development
-environments/.env.production
-
->>>>>>> feature/login-fb
 # Logs
 logs
 *.log
