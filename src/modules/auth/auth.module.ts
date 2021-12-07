@@ -1,4 +1,3 @@
-import { UserService } from 'src/modules/user/service/user.service';
 import { RolePermissionModule } from './../role-permission/role-permission.module';
 import { AuthController } from './controllers/auth.controller';
 import { UserModule } from './../user/user.module';
@@ -15,7 +14,7 @@ import { AuthService } from './services/auth.service';
     UserModule,
     RolePermissionModule,
     JwtModule.register({
-      secret: process.env.JWT_CONSTANT_SECRET_KEY,
+      secret: `${process.env.JWT_CONSTANT_SECRET_KEY}`,
       signOptions: { expiresIn: '1d' },
     }),
   ],
