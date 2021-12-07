@@ -1,6 +1,7 @@
-export interface IUserInfo {
-  id: string;
-  name: string;
+export interface jwtPayload {
   username: string;
+  id: string;
   email: string;
+  name: string;
+  role: string;
 }

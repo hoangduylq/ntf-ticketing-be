@@ -1,6 +1,11 @@
 import { RoleService } from '../../role-permission/services/role.service';
 import { UsersRepository } from '../infrastructure/user.repository';
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserCredentialsDto } from '../dto/user-credential.dto';
@@ -50,7 +55,7 @@ export class UserService {
     if (isInvalidUser) {
       throw new ConflictException('Email already exists');
     }
-    const role = await this.roleService.findRole('User');
+    const role = await this.roleService.findRole('user');
 
     const newUser = this.usersRespository.create({
       email: email,
@@ -73,7 +78,24 @@ export class UserService {
     return dto;
   }
 
+  // nen try catch de con biet loi do code hay do database
+  // con ki hon thi log luon o service nao
   async getUserById(id: string | number) {
-    return this.usersRespository.findOne(id);
+    try {
+      const user = await this.usersRespository.findOne(id);
+
+      if (!user) {
+        throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+      }
+
+      return user;
+    } catch (err) {
+      // them dong message userservice vao
+      throw new HttpException(err?.mesage, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async getAllUser() {
+    return this.usersRespository.findOne();
   }
 }
