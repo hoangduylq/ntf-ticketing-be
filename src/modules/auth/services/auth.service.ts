@@ -43,16 +43,22 @@ export class AuthService {
         'name',
         'email',
       );
-      console.log(user);
 
       if (user) {
-        return this.usersService.findOrCreate(user);
+        const internalUser = await this.usersService.findOrCreate(user);
+        const payload = {
+          username: internalUser.username,
+          id: internalUser.id,
+          email: internalUser.email,
+          name: internalUser.name,
+        };
+        const accessToken: string = await this.jwtService.sign(payload);
+        return { accessToken };
       }
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
-
       throw new UnauthorizedException('Invalid access token');
     }
   }

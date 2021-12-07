@@ -39,6 +39,7 @@ export class UserService {
       email: result.email,
       name: result.name,
       role: result.role,
+      isSocial: result.isSocial,
     };
     return dto;
   }
@@ -67,6 +68,7 @@ export class UserService {
       email: result.email,
       name: result.name,
       role: result.role,
+      isSocial: result.isSocial,
     };
     return dto;
   }
