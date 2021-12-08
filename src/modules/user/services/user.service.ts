@@ -52,9 +52,10 @@ export class UserService {
   async signup(userCredential: UserCredentialsDto): Promise<any> {
     const { email, name, gender, password } = userCredential;
     const isInvalidUser = await this.findUserByEmail(email);
-    if (isInvalidUser) {
-      throw new ConflictException('Email already exists');
-    }
+    if (isInvalidUser && isInvalidUser.isSocial) return isInvalidUser;
+
+    if (isInvalidUser) throw new ConflictException('Email already exists');
+
     const role = await this.roleService.findRole('user');
 
     const newUser = this.userRespository.create({
