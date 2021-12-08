@@ -1,4 +1,4 @@
-import { StatusEnum } from '../enums/status.enum';
+import { StatusEventEnum } from './../enums/status.enum';
 import {
   BaseEntity,
   Column,
@@ -52,17 +52,17 @@ export class EventEntity extends BaseEntity {
   @Column({ nullable: true, type: 'varchar' })
   eventAddress?: string;
 
-  @Column({ nullable: true, type: 'date' })
-  saleStartDate?: string;
+  @Column({ nullable: false, type: 'date' })
+  saleStartDate!: string;
 
-  @Column({ nullable: true, type: 'date' })
-  saleEndDate?: string;
+  @Column({ nullable: false, type: 'date' })
+  saleEndDate!: string;
 
-  @Column({ nullable: true, type: 'date' })
-  eventStartDate?: string;
+  @Column({ nullable: false, type: 'date' })
+  eventStartDate!: string;
 
-  @Column({ nullable: true, type: 'date' })
-  eventEndDate?: string;
+  @Column({ nullable: false, type: 'date' })
+  eventEndDate!: string;
 
   @Column({ nullable: false, type: 'integer' })
   totalTickets!: number;
@@ -99,10 +99,10 @@ export class EventEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: StatusEnum,
-    default: StatusEnum.Ready,
+    enum: StatusEventEnum,
+    default: StatusEventEnum.Pending,
   })
-  status: StatusEnum;
+  status: StatusEventEnum;
 
   @CreateDateColumn()
   createdAt: Date;

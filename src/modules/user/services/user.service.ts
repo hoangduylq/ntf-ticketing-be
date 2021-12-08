@@ -51,6 +51,7 @@ export class UserService {
 
   async signup(userCredential: UserCredentialsDto): Promise<any> {
     const { email, name, gender, password } = userCredential;
+
     const isInvalidUser = await this.findUserByEmail(email);
     if (isInvalidUser && isInvalidUser.isSocial) return isInvalidUser;
 
