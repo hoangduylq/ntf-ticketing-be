@@ -18,7 +18,6 @@ export class AuthService {
     private readonly facebookService: FacebookAuthService,
   ) {}
 
-  //generate token
   async login(userLogin: UserLoginDto): Promise<{ accessToken: string }> {
     const { email, password } = userLogin;
     const user = await this.usersService.findUserByEmail(email);

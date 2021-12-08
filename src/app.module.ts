@@ -1,3 +1,4 @@
+import { EventModule } from './modules/event/event.module';
 import { RolePermissionModule } from './modules/role-permission/role-permission.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -33,6 +34,7 @@ import { join } from 'path';
     AuthModule,
     UserModule,
     RolePermissionModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],

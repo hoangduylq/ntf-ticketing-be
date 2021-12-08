@@ -67,7 +67,7 @@ export class EventEntity extends BaseEntity {
   @Column({ nullable: true, type: 'text' })
   ticketImageUrl?: string;
 
-  @Column({ nullable: false, type: 'float' })
+  @Column({ nullable: false, type: 'decimal' })
   ticketPrice!: number;
 
   @Column({ nullable: false, type: 'integer' })
