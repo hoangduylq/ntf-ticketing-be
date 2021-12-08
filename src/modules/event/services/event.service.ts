@@ -16,7 +16,7 @@ export class EventServie {
     return await this.eventRepository.find();
   }
 
-  async getAllEventWithUser(userId: string): Promise<EventEntity[]> {
+  async getAllEventWithUserId(userId: string): Promise<EventEntity[]> {
     return await this.eventRepository.find({ userId });
   }
 
@@ -31,18 +31,6 @@ export class EventServie {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-
-  // async getEventByUserId(id: string): Promise<EventEntity | undefined> {
-  //   try {
-  //     const event = this.eventRepository.findOneOrFail({ id });
-  //     if (!event) {
-  //       throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
-  //     }
-  //     return event;
-  //   } catch (error) {
-  //     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-  //   }
-  // }
 
   async create(createEventDto: EventDto): Promise<any> {
     try {
@@ -77,19 +65,12 @@ export class EventServie {
     eventDetail: EventDto,
   ): Promise<any> {
     try {
-      try {
-        const event = await this.getEventById(id);
-        if (event.userId === userId) {
-          const result = await this.eventRepository.update(
-            event.id,
-            eventDetail,
-          );
-          return result;
-        } else {
-          throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
-        }
-      } catch (error) {
-        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      const event = await this.getEventById(id);
+      if (event.userId === userId) {
+        const result = await this.eventRepository.update(event.id, eventDetail);
+        return result;
+      } else {
+        throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
       }
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

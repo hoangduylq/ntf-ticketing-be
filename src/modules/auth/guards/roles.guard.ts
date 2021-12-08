@@ -1,4 +1,3 @@
-import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
   CanActivate,
   ExecutionContext,
@@ -25,8 +24,10 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const userData: UserEntity = request.user;
-    const userRole = userData.role.name;
+    console.log(request.user);
+    const userData = request.user;
+
+    const userRole = userData.role;
 
     if (!userData || !requiredRoles.includes(userRole)) {
       throw new HttpException('Permission denied!', HttpStatus.FORBIDDEN);

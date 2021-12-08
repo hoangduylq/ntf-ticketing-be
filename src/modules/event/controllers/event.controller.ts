@@ -27,22 +27,26 @@ export class EventController {
     return this.eventService.create(model);
   }
 
-  @Put('/:id')
+  @Put('/:eventId')
   @Roles(Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   async updateEvent(
     @Request() req,
-    @Param('id') id: string,
+    @Param('eventId') eventId: string,
     @Body() eventInfo: EventDto,
   ): Promise<any> {
     const { user } = req;
-    return await this.eventService.updateEventDetail(id, user.id, eventInfo);
+    return await this.eventService.updateEventDetail(
+      eventId,
+      user.id,
+      eventInfo,
+    );
   }
 
-  @Get('/:id')
-  async getEvent(@Param('id') id: string): Promise<EventEntity> {
-    return await this.eventService.getEventById(id);
+  @Get('/:eventId')
+  async getEvent(@Param('eventId') eventId: string): Promise<EventEntity> {
+    return await this.eventService.getEventById(eventId);
   }
 
   @Get('')
