@@ -13,14 +13,14 @@ export class UserCredentialsDto {
   email: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @MinLength(8)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message: 'Password is too weak',
   })
-  password: string;
+  password?: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  gender: GenderEnum;
+  gender?: GenderEnum;
 }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { RoleEntity } from './../../role-permission/domain/entities/role.entity';
+// import { RoleEntity } from './../../role-permission/domain/entities/role.entity';
 export class UserDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -13,7 +13,7 @@ export class UserDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  role: RoleEntity;
+  role: string;
 
   @ApiProperty()
   @IsNotEmpty()

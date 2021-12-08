@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -13,11 +14,17 @@ export class RolePermissionEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column('uuid')
+  roleId: string;
+
   @ManyToOne(() => RoleEntity, (role) => role.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'roleId' })
   role: RoleEntity;
 
+  @Column({ type: 'uuid' })
+  permissonId: string;
+
   @ManyToOne(() => PermissionEntity, (permission) => permission.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'permissionId' })
   permission: PermissionEntity;
 }
