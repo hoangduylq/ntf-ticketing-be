@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from './../../auth/guards/jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 import {
   Body,
@@ -21,7 +22,7 @@ export class UserController {
 
   @Get('/:id')
   @Roles(Role.User)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   getProfile(@Param('id') id: string) {
     return this.userService.getUserById(id);
@@ -35,7 +36,7 @@ export class UserController {
 
   @Get('')
   @Roles(Role.Admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   getAllProfile() {
     return this.userService.getAllUser();
