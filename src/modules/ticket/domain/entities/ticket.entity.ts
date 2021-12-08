@@ -16,8 +16,11 @@ export class TicketEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column('uuid')
+  eventId: string;
+
   @ManyToOne(() => EventEntity, (event) => event.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'eventId' })
   event: EventEntity;
 
   @Column({

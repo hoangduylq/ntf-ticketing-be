@@ -48,8 +48,11 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: true, type: 'text' })
   avatar?: string;
 
+  @Column({ type: 'uuid' })
+  roleId!: string;
+
   @ManyToOne(() => RoleEntity, (role) => role.id, { eager: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'roleId' })
   role!: RoleEntity;
 
   @Column({ nullable: false, type: 'boolean', default: false })

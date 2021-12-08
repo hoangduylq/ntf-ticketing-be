@@ -18,13 +18,22 @@ export class OrderEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column({ type: 'uuid' })
+  eventId: string;
+
   @ManyToOne(() => EventEntity, (event) => event.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'uuid' })
   event: EventEntity;
 
+  @Column({ type: 'uuid' })
+  userId: string;
+
   @ManyToOne(() => UserEntity, (user) => user.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'userId' })
   user: UserEntity;
+
+  @Column({ type: 'uuid' })
+  bankId: string;
 
   @ManyToOne(() => BankEntity, (bank) => bank.id)
   @JoinColumn()
