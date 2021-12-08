@@ -39,6 +39,8 @@ export class AuthService {
         'email',
       );
 
+      console.log(user);
+
       if (user) {
         const internalUser = await this.usersService.findOrCreate(user);
         const accessToken = await this.generateToken(internalUser);
