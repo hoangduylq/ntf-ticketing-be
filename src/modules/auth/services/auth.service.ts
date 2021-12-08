@@ -1,6 +1,7 @@
 import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
   HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -22,11 +23,15 @@ export class AuthService {
   async login(userLogin: UserLoginDto): Promise<{ accessToken: string }> {
     const { email, password } = userLogin;
     const user = await this.usersService.findUserByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const accessToken = await this.generateToken(user);
-      return { accessToken };
+    if (!user.isSocial) {
+      if (user && (await bcrypt.compare(password, user.password))) {
+        const accessToken = await this.generateToken(user);
+        return { accessToken };
+      } else {
+        throw new UnauthorizedException('Please check your email or password');
+      }
     } else {
-      throw new UnauthorizedException('Please check your email or password');
+      throw new HttpException('Login Fail', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -40,7 +45,7 @@ export class AuthService {
       );
 
       if (user) {
-        const internalUser = await this.usersService.findOrCreate(user);
+        const internalUser = await this.usersService.signup(user);
         const accessToken = await this.generateToken(internalUser);
         return { accessToken };
       }

@@ -18,8 +18,11 @@ export class BankEntity extends BaseEntity {
   @Column({ nullable: false, type: 'varchar' })
   name!: string;
 
+  @Column({ type: 'uuid' })
+  userId: string;
+
   @ManyToOne(() => UserEntity, (user) => user.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'userId' })
   user: UserEntity;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })

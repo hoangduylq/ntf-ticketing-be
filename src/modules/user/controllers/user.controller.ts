@@ -1,5 +1,4 @@
 import { JwtAuthGuard } from './../../auth/guards/jwt-auth.guard';
-import { AuthGuard } from '@nestjs/passport';
 import {
   Body,
   Controller,

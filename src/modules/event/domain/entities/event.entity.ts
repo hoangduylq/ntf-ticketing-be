@@ -20,12 +20,18 @@ export class EventEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column({ type: 'uuid' })
+  categoryId: string;
+
   @ManyToOne(() => EventCategoryEntity, (category) => category.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'categoryId' })
   category: EventCategoryEntity;
 
+  @Column({ type: 'uuid' })
+  userId: string;
+
   @ManyToOne(() => UserEntity, (user) => user.id)
-  @JoinColumn()
+  @JoinColumn({ name: 'userId' })
   user: UserEntity;
 
   @Column({ nullable: false, length: 200, type: 'varchar' })
