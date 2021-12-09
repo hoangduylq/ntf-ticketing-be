@@ -23,4 +23,7 @@ export class UserCredentialsDto {
   @ApiProperty()
   @IsNotEmpty()
   gender?: GenderEnum;
+
+  //uid Facebook
+  id?: string;
 }

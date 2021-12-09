@@ -44,8 +44,6 @@ export class AuthService {
         'email',
       );
 
-      console.log(user);
-
       if (user) {
         const internalUser = await this.usersService.signup(user);
         const accessToken = await this.generateToken(internalUser);

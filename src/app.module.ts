@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { join } from 'path';
+import { TicketModule } from './modules/ticket/ticket.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { join } from 'path';
     AuthModule,
     UserModule,
     RolePermissionModule,
+    TicketModule,
   ],
   controllers: [AppController],
   providers: [AppService],

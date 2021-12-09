@@ -24,33 +24,8 @@ export class UserService {
     return user;
   }
 
-  // async findOrCreate(profile): Promise<any> {
-  //   const user = await this.userRespository.findOne({ email: profile.email });
-  //   if (user && user.isSocial) return user;
-
-  //   if (user) throw new ConflictException('Email already exists');
-
-  //   const role = await this.roleService.findRole('user');
-
-  //   const newUser = this.userRespository.create({
-  //     email: profile.email,
-  //     username: profile.id,
-  //     name: profile.name,
-  //     roleId: role.id,
-  //     isSocial: true,
-  //   });
-  //   const result = await this.userRespository.save(newUser);
-  //   const dto: UserDto = {
-  //     email: result.email,
-  //     name: result.name,
-  //     role: role.name,
-  //     isSocial: result.isSocial,
-  //   };
-  //   return dto;
-  // }
-
   async signup(userCredential: UserCredentialsDto): Promise<any> {
-    const { email, name, gender, password } = userCredential;
+    const { id: uidFacebook, email, name, gender, password } = userCredential;
     const isInvalidUser = await this.findUserByEmail(email);
     if (isInvalidUser && isInvalidUser.isSocial) return isInvalidUser;
 
@@ -60,7 +35,7 @@ export class UserService {
 
     const newUser = this.userRespository.create({
       email: email,
-      username: email,
+      username: password ? email : uidFacebook,
       name: name,
       isSocial: password ? false : true,
       roleId: role.id,
