@@ -9,6 +9,10 @@ export default () => ({
     sync: process.env.DATABASE_SYNC === 'true',
     ssl: process.env.DATABASE_SSL === 'true',
   },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+  },
   authFacebook: {
     app_id: process.env.FB_APP_ID,
     app_secret: process.env.FB_APP_SECRET,

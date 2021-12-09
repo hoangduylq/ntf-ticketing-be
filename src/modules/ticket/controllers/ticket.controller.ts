@@ -9,6 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { IPaginateOptions } from '../domain/interfaces/paginate_options.interface';
+import { TicketUpdateDto } from '../dto/ticket-update.dto';
 import { TicketDto } from '../dto/ticket.dto';
 import { TicketService } from '../services/ticket.service';
 
@@ -22,6 +24,11 @@ export class TicketController {
     return this.ticketService.create(ticketDto);
   }
 
+  @Get('paginate')
+  pagination(@Query() options: IPaginateOptions) {
+    return this.ticketService.paginate(options);
+  }
+
   @Get('getAll')
   findAll() {
     return this.ticketService.findAll();
@@ -33,19 +40,12 @@ export class TicketController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() ticketDto: TicketDto) {
-    return this.ticketService.update(id, ticketDto);
+  update(@Param('id') id: string, @Body() ticketUpdateDto: TicketUpdateDto) {
+    return this.ticketService.update(id, ticketUpdateDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ticketService.remove(id);
-  }
-
-  @Get('test-queue')
-  testQueue(@Query('id') id: string) {
-    this.ticketService.generateTokenNft(id);
-
-    return id;
   }
 }

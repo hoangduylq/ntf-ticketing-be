@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { join } from 'path';
 import { TicketModule } from './modules/ticket/ticket.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TicketModule } from './modules/ticket/ticket.module';
     UserModule,
     RolePermissionModule,
     TicketModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
