@@ -1,6 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { config } from 'dotenv';
+config();
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';

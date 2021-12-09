@@ -1,7 +1,8 @@
+import { Pagination } from './../dto/event.dto';
 import { StatusEventEnum } from './../domain/enums/status.enum';
-import { EventDto } from '../dto/event.dto';
+import { EventDto, PaginationEvent } from '../dto/event.dto';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -12,12 +13,34 @@ export class EventServie {
     private readonly eventRepository: Repository<EventEntity>,
   ) {}
 
-  async getAllEvent(): Promise<EventEntity[]> {
-    return await this.eventRepository.find();
-  }
+  async getAllEvent(
+    query: PaginationEvent,
+    pagination: Pagination,
+  ): Promise<EventEntity[]> {
+    try {
+      const { page = 1, pageSize = 0 } = pagination;
+      const skipAmount = (page - 1) * pageSize;
 
-  async getAllEventWithUserId(userId: string): Promise<EventEntity[]> {
-    return await this.eventRepository.find({ userId });
+      for (const field in query) {
+        if (typeof query[field] === 'string') {
+          query[field] = Like(`%${query[field]}%`);
+        }
+      }
+
+      return await this.eventRepository.find({
+        where: query,
+        skip: skipAmount,
+        take: pageSize,
+        order: {
+          categoryId: 'ASC',
+        },
+      });
+    } catch (err) {
+      throw new HttpException(
+        `[EventService]: ${err?.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async getEventById(id: string): Promise<EventEntity | undefined> {
@@ -62,7 +85,7 @@ export class EventServie {
   async updateEventDetail(
     id: string,
     userId: string,
-    eventDetail: EventDto,
+    eventDetail: any,
   ): Promise<any> {
     try {
       const event = await this.getEventById(id);

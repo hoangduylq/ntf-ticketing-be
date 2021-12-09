@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, Min } from 'class-validator';
 export class EventDto {
   @ApiProperty()
@@ -54,7 +54,6 @@ export class EventDto {
   eventEndDate: string;
 
   //optional
-
   @ApiProperty()
   logoUrl?: string;
 
@@ -85,3 +84,15 @@ export class EventDto {
   @ApiProperty()
   organizationAddress?: string;
 }
+
+export class Pagination {
+  @ApiProperty()
+  page?: number = 1;
+
+  @ApiProperty()
+  pageSize?: number = 0;
+}
+
+export class PaginationEvent extends PartialType(
+  IntersectionType(EventDto, Pagination),
+) {}

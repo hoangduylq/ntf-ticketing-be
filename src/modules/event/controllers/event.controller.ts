@@ -1,3 +1,4 @@
+import { PaginationEvent, Pagination } from './../dto/event.dto';
 import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
 import { JwtAuthGuard } from './../../auth/guards/jwt-auth.guard';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
@@ -6,13 +7,16 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { EventServie } from '../services/event.service';
 import { Role, Roles } from 'src/modules/auth/decorator/role.decorator';
 
@@ -22,6 +26,7 @@ export class EventController {
   constructor(private readonly eventService: EventServie) {}
 
   @Post('')
+  @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
   async createEvent(@Body() model: EventDto) {
     return this.eventService.create(model);
@@ -49,8 +54,16 @@ export class EventController {
     return await this.eventService.getEventById(eventId);
   }
 
-  @Get('')
-  async getAllEvent(): Promise<EventEntity[]> {
-    return await this.eventService.getAllEvent();
+  @Get()
+  async getAllEvent(@Query() query: PaginationEvent): Promise<EventEntity[]> {
+    try {
+      const { page, pageSize, ...rest } = query || {};
+      return await this.eventService.getAllEvent(rest, {
+        page,
+        pageSize,
+      } as Pagination);
+    } catch (err) {
+      throw new HttpException(err?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
