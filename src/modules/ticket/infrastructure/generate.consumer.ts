@@ -1,3 +1,4 @@
+import { EventService } from './../../event/services/event.service';
 import { TicketRepository } from './ticket.repository';
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
@@ -8,6 +9,7 @@ export class GenerateConsumer {
   constructor(
     @InjectRepository(TicketRepository)
     private ticketRepository: TicketRepository,
+    private eventService: EventService,
   ) {}
 
   @Process('generate-job')
@@ -19,7 +21,7 @@ export class GenerateConsumer {
         eventId,
         nftToken: generateToken,
       };
-      console.log(id, ticket);
+      await this.eventService.updateAvaiableTickets(eventId, -1);
       await this.ticketRepository.save(ticket);
     } catch (error) {
       console.log(error.message);

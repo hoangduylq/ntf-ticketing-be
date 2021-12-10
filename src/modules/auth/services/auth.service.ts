@@ -19,11 +19,10 @@ export class AuthService {
     private readonly facebookService: FacebookAuthService,
   ) {}
 
-  //generate token
   async login(userLogin: UserLoginDto): Promise<{ accessToken: string }> {
     const { email, password } = userLogin;
     const user = await this.usersService.findUserByEmail(email);
-    if (!user.isSocial) {
+    if (user && !user.isSocial) {
       if (user && (await bcrypt.compare(password, user.password))) {
         const accessToken = await this.generateToken(user);
         return { accessToken };

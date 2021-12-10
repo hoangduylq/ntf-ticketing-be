@@ -56,6 +56,24 @@ export class TicketService {
     }
   }
 
+  async getTicketReady(eventId: string) {
+    try {
+      const ticket = await this.ticketRepository.find({
+        where: {
+          eventId: eventId,
+          status: StatusEnum.Ready,
+        },
+        take: 1,
+        order: {
+          createdAt: 'ASC',
+        },
+      });
+      return ticket;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   async findOneById(id: string) {
     const entity = await this.ticketRepository.findOne({ id });
     return entity;

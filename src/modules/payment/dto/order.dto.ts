@@ -19,5 +19,5 @@ export class OrderDto {
   amount: number;
 
   @ApiProperty()
-  tickets: string[];
+  tickets?: string[];
 }

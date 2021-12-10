@@ -21,4 +21,7 @@ export default () => ({
   accessTokenExpiration: process.env.ACCESS_TOKEN_EXPIRATION,
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
   refreshTokenExpiration: process.env.REFRESH_TOKEN_EXPIRATION,
+  cloudinaryName: process.env.CLOUD_NAME,
+  apiKeyCloudinary: process.env.API_KEY,
+  apiSecretCloudinary: process.env.API_SECRET,
 });

@@ -1,3 +1,4 @@
+import { EventModule } from './../event/event.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TicketController } from './controllers/ticket.controller';
@@ -28,6 +29,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     BullModule.registerQueue({
       name: 'generate-token-nft-queue',
     }),
+    EventModule,
   ],
   exports: [TicketService],
   controllers: [TicketController],

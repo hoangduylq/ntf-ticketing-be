@@ -1,3 +1,5 @@
+import { UploadImgModule } from './modules/upload-img/upload-img.module';
+import { EventModule } from './modules/event/event.module';
 import { RolePermissionModule } from './modules/role-permission/role-permission.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -32,11 +34,14 @@ import { PaymentModule } from './modules/payment/payment.module';
         ssl: configService.get('database.ssl'),
       }),
     }),
+
     AuthModule,
     UserModule,
     RolePermissionModule,
     TicketModule,
     PaymentModule,
+    EventModule,
+    UploadImgModule,
   ],
   controllers: [AppController],
   providers: [AppService],

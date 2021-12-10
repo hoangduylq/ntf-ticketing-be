@@ -20,7 +20,14 @@ export class UserService {
   ) {}
 
   async findUserByEmail(email: string): Promise<any> {
-    const user = this.userRespository.findOne({ email });
+    // try {
+    //   const user = await this.userRespository.findOneOrFail({ email });
+    //   return user;
+    // } catch (error) {
+    //   throw new HttpException('Login Fail', HttpStatus.NOT_FOUND);
+    // }
+
+    const user = await this.userRespository.findOne({ email });
     return user;
   }
 

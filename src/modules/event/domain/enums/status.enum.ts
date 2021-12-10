@@ -1,4 +1,5 @@
-export enum StatusEnum {
+export enum StatusEventEnum {
+  Pending = 'Pending',
   Ready = 'Ready',
   Sale = 'Sale',
   Starting = 'Starting',
