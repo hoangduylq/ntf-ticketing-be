@@ -1,11 +1,12 @@
-import {
-  Injectable,
-  UploadedFile,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
-import { resolve } from 'path';
+import toStream = require('buffer-to-stream');
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.API_SECRET,
+// });
 cloudinary.config({
   cloud_name: 'dnhxzvdy2',
   api_key: '786919995595549',
@@ -14,19 +15,35 @@ cloudinary.config({
 
 @Injectable()
 export class UploadImgServie {
-  async uploadImageToCloudinary(@UploadedFile() file) {
+  async uploadImageWithCloudinary(file: Express.Multer.File) {
     try {
-      console.log(__dirname);
-      const dir = resolve(__dirname, 'download.jpg');
-      console.log('dir', dir);
-      const a = await cloudinary.uploader.upload('download.jpg', {
-        folder: dir,
+      if (!file)
+        throw new HttpException(
+          'No files were uploaded',
+          HttpStatus.BAD_REQUEST,
+        );
+
+      if (file.size > 1024 * 1024) {
+        throw new HttpException('Size too large', HttpStatus.BAD_REQUEST);
+      }
+
+      if (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png') {
+        throw new HttpException(
+          'File format is incorrect',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return new Promise((resolve, reject) => {
+        const upload = cloudinary.uploader.upload_stream((error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        });
+
+        toStream(file.buffer).pipe(upload);
       });
-      console.log('a', a);
-      return a;
-    } catch (error) {
-      console.log(error);
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    } catch (err) {
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

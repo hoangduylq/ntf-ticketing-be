@@ -2,8 +2,8 @@ import { UploadImgServie } from './services/upload-img.services';
 import {
   Controller,
   Post,
-  UploadedFile,
   UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -11,9 +11,9 @@ import { ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
 @Controller('upload')
 @ApiTags('upload')
 export class UploadController {
-  constructor(private readonly uploadService: UploadImgServie) {}
+  constructor(private readonly uploadImageServivce: UploadImgServie) {}
 
-  @Post('upload')
+  @Post('')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -27,8 +27,10 @@ export class UploadController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile2(@UploadedFile('file') file) {
-    console.log(file);
-    await this.uploadService.uploadImageToCloudinary(file);
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const result = await this.uploadImageServivce
+      .uploadImageWithCloudinary(file)
+      .then((result: any) => result.url);
+    return { url: result };
   }
 }
