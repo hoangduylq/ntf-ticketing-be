@@ -1,4 +1,4 @@
-import { UploadController } from './upload-img.controller';
+import { UploadController } from './controllers/upload-img.controller';
 import { UploadImgServie } from './services/upload-img.services';
 import { Module } from '@nestjs/common';
 // import { v2 as cloudinary } from 'cloudinary';

@@ -1,4 +1,4 @@
-import { UploadImgServie } from './services/upload-img.services';
+import { UploadImgServie } from '../services/upload-img.services';
 import {
   Controller,
   Post,
@@ -8,12 +8,12 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
 
-@Controller('upload')
-@ApiTags('upload')
+@Controller('image')
+@ApiTags('image')
 export class UploadController {
   constructor(private readonly uploadImageServivce: UploadImgServie) {}
 
-  @Post('')
+  @Post('/upload')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
