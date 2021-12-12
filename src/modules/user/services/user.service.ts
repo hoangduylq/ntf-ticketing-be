@@ -1,3 +1,4 @@
+import { UserEntity } from './../domain/entities/user.entity';
 import { UserRepository } from './../infrastructure/user.repository';
 import { RoleService } from '../../role-permission/services/role.service';
 import {
@@ -20,13 +21,6 @@ export class UserService {
   ) {}
 
   async findUserByEmail(email: string): Promise<any> {
-    // try {
-    //   const user = await this.userRespository.findOneOrFail({ email });
-    //   return user;
-    // } catch (error) {
-    //   throw new HttpException('Login Fail', HttpStatus.NOT_FOUND);
-    // }
-
     const user = await this.userRespository.findOne({ email });
     return user;
   }
@@ -66,7 +60,7 @@ export class UserService {
     return dto;
   }
 
-  async getUserById(id: string | number) {
+  async getUserById(id: string | number): Promise<UserEntity> {
     try {
       const user = await this.userRespository.findOne(id);
 
@@ -80,7 +74,11 @@ export class UserService {
     }
   }
 
-  async getAllUser() {
-    return this.userRespository.findOne();
+  async getAllUser(): Promise<UserEntity[]> {
+    try {
+      return this.userRespository.find();
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

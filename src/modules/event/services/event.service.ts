@@ -13,12 +13,33 @@ export class EventService {
     private readonly eventRepository: Repository<EventEntity>,
   ) {}
 
-  async getAllEvent(
+  async create(createEventDto: EventDto): Promise<any> {
+    try {
+      const newEvent = this.eventRepository.create(createEventDto);
+      await this.eventRepository.save(newEvent);
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Create Event Successfully',
+      };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getEvents(): Promise<EventEntity[]> {
+    try {
+      return await this.eventRepository.find();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getEventPaging(
     query: PaginationEvent,
     pagination: Pagination,
   ): Promise<EventEntity[]> {
     try {
-      const { page = 1, pageSize = 0 } = pagination;
+      const { page = 1, pageSize = 5 } = pagination;
       const skipAmount = (page - 1) * pageSize;
 
       for (const field in query) {
@@ -50,19 +71,6 @@ export class EventService {
         throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
       }
       return event;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async create(createEventDto: EventDto): Promise<any> {
-    try {
-      const newEvent = this.eventRepository.create(createEventDto);
-      await this.eventRepository.save(newEvent);
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: 'Create Event Successfully',
-      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

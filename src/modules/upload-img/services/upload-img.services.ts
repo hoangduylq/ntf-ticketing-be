@@ -46,4 +46,14 @@ export class UploadImgServie {
       throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  async deleteImageInCloundinary(publicId: string) {
+    try {
+      cloudinary.api.delete_resources([publicId], function (error, result) {
+        return result;
+      });
+    } catch (err) {
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

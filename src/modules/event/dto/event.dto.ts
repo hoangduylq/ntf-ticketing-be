@@ -93,6 +93,17 @@ export class Pagination {
   pageSize?: number = 0;
 }
 
+export class EventFilterDto {
+  @ApiProperty()
+  name?: string;
+
+  @ApiProperty()
+  userId?: string;
+
+  @ApiProperty()
+  categoryId?: string;
+}
+
 export class PaginationEvent extends PartialType(
-  IntersectionType(EventDto, Pagination),
+  IntersectionType(EventFilterDto, Pagination),
 ) {}

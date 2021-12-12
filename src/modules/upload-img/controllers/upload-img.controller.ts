@@ -4,16 +4,20 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  Delete,
+  Param,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { query } from 'express';
 
 @Controller('image')
 @ApiTags('image')
 export class UploadController {
   constructor(private readonly uploadImageServivce: UploadImgServie) {}
 
-  @Post('/upload')
+  @Post('')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -27,10 +31,19 @@ export class UploadController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const result = await this.uploadImageServivce
-      .uploadImageWithCloudinary(file)
-      .then((result: any) => result.url);
+  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+    const result = await this.uploadImageServivce.uploadImageWithCloudinary(
+      file,
+    );
+    console.log(result);
     return { url: result };
+  }
+
+  @Delete('/:publicId')
+  async deleteImage(@Query('publicId') publicId: string) {
+    const result = await this.uploadImageServivce.deleteImageInCloundinary(
+      publicId,
+    );
+    return { result };
   }
 }
