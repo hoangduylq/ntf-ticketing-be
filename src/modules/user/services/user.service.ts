@@ -26,7 +26,6 @@ export class UserService {
     // } catch (error) {
     //   throw new HttpException('Login Fail', HttpStatus.NOT_FOUND);
     // }
-
     const user = await this.userRespository.findOne({ email });
     return user;
   }
@@ -36,7 +35,8 @@ export class UserService {
     const isInvalidUser = await this.findUserByEmail(email);
     if (isInvalidUser && isInvalidUser.isSocial) return isInvalidUser;
 
-    if (isInvalidUser) throw new ConflictException('Email already exists');
+    if (isInvalidUser && !isInvalidUser.isSocial)
+      throw new ConflictException('Email already exists');
 
     const role = await this.roleService.findRole('user');
 
