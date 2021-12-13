@@ -2,7 +2,6 @@ import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
   BadRequestException,
   HttpException,
-  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';

@@ -41,17 +41,11 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   async updateEvent(
-    @Request() req,
     @Param('eventId') eventId: string,
     @Body() eventInfo: EventDto,
   ): Promise<any> {
     try {
-      const { user } = req;
-      return await this.eventService.updateEventDetail(
-        eventId,
-        user.id,
-        eventInfo,
-      );
+      return await this.eventService.updateEventDetail(eventId, eventInfo);
     } catch (error) {
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }

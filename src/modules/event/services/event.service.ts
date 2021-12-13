@@ -6,17 +6,20 @@ import { Like, Repository } from 'typeorm';
 import {
   BadRequestException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
+    @Inject(REQUEST) private readonly req: any,
   ) {}
 
   async create(createEventDto: EventDto): Promise<any> {
@@ -93,14 +96,11 @@ export class EventService {
     }
   }
 
-  async updateEventDetail(
-    id: string,
-    userId: string,
-    eventDetail: any,
-  ): Promise<any> {
+  async updateEventDetail(id: string, eventDetail: any): Promise<any> {
     try {
+      const user = this.req.user;
       const event = await this.getEventById(id);
-      if (event.userId === userId) {
+      if (event.userId === user.id) {
         const result = await this.eventRepository.update(event.id, eventDetail);
         return result;
       } else {
