@@ -12,8 +12,8 @@ import {
 } from 'typeorm';
 import { GenderEnum } from '../enums/gender.enum';
 import { RoleEntity } from './../../../role-permission/domain/entities/role.entity';
-import { BankEntity } from './../../../payment/domain/entities/bank.entity';
-import { OrderEntity } from './../../../payment/domain/entities/order.entity';
+import { BankEntity } from './../../../order/domain/entities/bank.entity';
+import { OrderEntity } from './../../../order/domain/entities/order.entity';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {

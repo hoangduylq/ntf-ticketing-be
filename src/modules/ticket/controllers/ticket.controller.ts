@@ -19,7 +19,7 @@ import { TicketService } from '../services/ticket.service';
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
-  @Post('create')
+  @Post('')
   async create(@Body() ticketDto: TicketDto) {
     return this.ticketService.create(ticketDto);
   }

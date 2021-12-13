@@ -1,14 +1,14 @@
-import { IPaginateOptions } from './../domain/interfaces/paginate_options.interface';
-import { EventService } from './../../event/services/event.service';
-import { TicketService } from './../../ticket/services/ticket.service';
+import { IPaginateOptions } from '../domain/interfaces/paginate_options.interface';
+import { EventService } from '../../event/services/event.service';
+import { TicketService } from '../../ticket/services/ticket.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDto } from '../dto/order.dto';
 import { OrderRepository } from '../infrastructure/order.repository';
-import { StatusEnum } from './../../ticket/domain/enums/status.enum';
+import { StatusEnum } from '../../ticket/domain/enums/status.enum';
 
 @Injectable()
-export class PaymentService {
+export class OrderService {
   constructor(
     @InjectRepository(OrderRepository) private orderRepository: OrderRepository,
     private ticketService: TicketService,

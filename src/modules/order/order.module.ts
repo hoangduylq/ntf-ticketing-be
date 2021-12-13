@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TicketModule } from './../ticket/ticket.module';
-import { PaymentService } from './services/payment.service';
-import { PaymentController } from './controllers/payment.controller';
+import { TicketModule } from '../ticket/ticket.module';
+import { OrderService } from './services/order.service';
+import { OrderController } from './controllers/order.controller';
 import { EventModule } from '../event/event.module';
 import { OrderRepository } from './infrastructure/order.repository';
 
@@ -12,8 +12,8 @@ import { OrderRepository } from './infrastructure/order.repository';
     TicketModule,
     EventModule,
   ],
-  exports: [PaymentService],
-  controllers: [PaymentController],
-  providers: [PaymentService],
+  exports: [OrderService],
+  controllers: [OrderController],
+  providers: [OrderService],
 })
-export class PaymentModule {}
+export class OrderModule {}
