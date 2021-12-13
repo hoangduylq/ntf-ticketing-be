@@ -52,35 +52,35 @@ export class EventEntity extends BaseEntity {
   @Column({ nullable: true, type: 'varchar' })
   eventAddress?: string;
 
-  @Column({ nullable: false, type: 'date' })
-  saleStartDate!: string;
+  @Column({ nullable: true, type: 'date' })
+  saleStartDate?: string;
 
-  @Column({ nullable: false, type: 'date' })
-  saleEndDate!: string;
+  @Column({ nullable: true, type: 'date' })
+  saleEndDate?: string;
 
-  @Column({ nullable: false, type: 'date' })
-  eventStartDate!: string;
+  @Column({ nullable: true, type: 'date' })
+  eventStartDate?: string;
 
-  @Column({ nullable: false, type: 'date' })
-  eventEndDate!: string;
+  @Column({ nullable: true, type: 'date' })
+  eventEndDate?: string;
 
-  @Column({ nullable: false, type: 'integer' })
-  totalTickets!: number;
+  @Column({ nullable: true, type: 'integer' })
+  totalTickets?: number;
 
-  @Column({ nullable: false, type: 'integer' })
-  availableTickets!: number;
+  @Column({ nullable: true, type: 'integer' })
+  availableTickets?: number;
 
   @Column({ nullable: true, type: 'text' })
   ticketImageUrl?: string;
 
-  @Column({ nullable: false, type: 'decimal' })
-  ticketPrice!: number;
+  @Column({ nullable: true, type: 'decimal' })
+  ticketPrice?: number;
 
-  @Column({ nullable: false, type: 'integer' })
-  maxTicketOrder!: number;
+  @Column({ nullable: true, type: 'integer' })
+  maxTicketOrder?: number;
 
-  @Column({ nullable: false, type: 'integer' })
-  minTicketOrder!: number;
+  @Column({ nullable: true, type: 'integer' })
+  minTicketOrder?: number;
 
   @Column({ nullable: true, type: 'varchar' })
   organizationInfo?: string;
