@@ -6,6 +6,8 @@ import {
   Injectable,
   HttpException,
   HttpStatus,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -65,12 +67,12 @@ export class UserService {
       const user = await this.userRespository.findOne(id);
 
       if (!user) {
-        throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+        throw new NotFoundException('User does not exist ');
       }
 
       return user;
-    } catch (err) {
-      throw new HttpException(err?.mesage, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -78,7 +80,7 @@ export class UserService {
     try {
       return this.userRespository.find();
     } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 }

@@ -1,5 +1,6 @@
 import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -30,7 +31,7 @@ export class AuthService {
         throw new UnauthorizedException('Please check your email or password');
       }
     } else {
-      throw new HttpException('Login Fail', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('Login Fail');
     }
   }
 

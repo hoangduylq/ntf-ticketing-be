@@ -3,7 +3,13 @@ import { StatusEventEnum } from './../domain/enums/status.enum';
 import { EventDto, PaginationEvent } from '../dto/event.dto';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
 import { Like, Repository } from 'typeorm';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -22,7 +28,7 @@ export class EventService {
         message: 'Create Event Successfully',
       };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -30,7 +36,7 @@ export class EventService {
     try {
       return await this.eventRepository.find();
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -56,11 +62,8 @@ export class EventService {
           categoryId: 'ASC',
         },
       });
-    } catch (err) {
-      throw new HttpException(
-        `[EventService]: ${err?.message}`,
-        HttpStatus.BAD_REQUEST,
-      );
+    } catch (error) {
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -68,11 +71,11 @@ export class EventService {
     try {
       const event = this.eventRepository.findOneOrFail({ id });
       if (!event) {
-        throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+        throw new NotFoundException('Event not found');
       }
       return event;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -86,7 +89,7 @@ export class EventService {
       const eventUpdated = this.eventRepository.save(event);
       return eventUpdated;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -101,10 +104,10 @@ export class EventService {
         const result = await this.eventRepository.update(event.id, eventDetail);
         return result;
       } else {
-        throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
+        throw new UnauthorizedException('Permission Denied');
       }
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
