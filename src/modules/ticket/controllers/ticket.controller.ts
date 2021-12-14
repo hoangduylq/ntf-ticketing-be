@@ -14,8 +14,8 @@ import { TicketUpdateDto } from '../dto/ticket-update.dto';
 import { TicketDto } from '../dto/ticket.dto';
 import { TicketService } from '../services/ticket.service';
 
-@Controller('ticket')
-@ApiTags('ticket')
+@Controller('tickets')
+@ApiTags('tickets')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
@@ -24,12 +24,12 @@ export class TicketController {
     return this.ticketService.create(ticketDto);
   }
 
-  @Get('paginate')
+  @Get('paging')
   pagination(@Query() options: IPaginateOptions) {
     return this.ticketService.paginate(options);
   }
 
-  @Get('getAll')
+  @Get('')
   findAll() {
     return this.ticketService.findAll();
   }

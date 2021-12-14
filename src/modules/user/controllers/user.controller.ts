@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Request,
@@ -30,14 +32,22 @@ export class UserController {
   @Post('signup')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signup(@Request() req, @Body() model: UserCredentialsDto) {
-    return this.userService.signup(req.body);
+    try {
+      return this.userService.signup(req.body);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get('')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
-  getAllProfile() {
-    return this.userService.getAllUser();
+  async getAllProfile() {
+    try {
+      return await this.userService.getAllUser();
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

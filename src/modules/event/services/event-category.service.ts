@@ -1,5 +1,5 @@
 import { EventCategoryEntity } from './../domain/entities/eventCategory.entity';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -11,7 +11,10 @@ export class EventCategoryServie {
   ) {}
 
   async getAll(): Promise<EventCategoryEntity[]> {
-    const listCategory = await this.eventCategoryRespository.find();
-    return listCategory;
+    try {
+      return await this.eventCategoryRespository.find();
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { UserEntity } from './../domain/entities/user.entity';
 import { UserRepository } from './../infrastructure/user.repository';
 import { RoleService } from '../../role-permission/services/role.service';
 import {
@@ -5,6 +6,8 @@ import {
   Injectable,
   HttpException,
   HttpStatus,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -20,12 +23,6 @@ export class UserService {
   ) {}
 
   async findUserByEmail(email: string): Promise<any> {
-    // try {
-    //   const user = await this.userRespository.findOneOrFail({ email });
-    //   return user;
-    // } catch (error) {
-    //   throw new HttpException('Login Fail', HttpStatus.NOT_FOUND);
-    // }
     const user = await this.userRespository.findOne({ email });
     return user;
   }
@@ -66,21 +63,25 @@ export class UserService {
     return dto;
   }
 
-  async getUserById(id: string | number) {
+  async getUserById(id: string | number): Promise<UserEntity> {
     try {
       const user = await this.userRespository.findOne(id);
 
       if (!user) {
-        throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+        throw new NotFoundException('User does not exist ');
       }
 
       return user;
-    } catch (err) {
-      throw new HttpException(err?.mesage, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      throw new BadRequestException(error?.message);
     }
   }
 
-  async getAllUser() {
-    return this.userRespository.findOne();
+  async getAllUser(): Promise<UserEntity[]> {
+    try {
+      return this.userRespository.find();
+    } catch (error) {
+      throw new BadRequestException(error?.message);
+    }
   }
 }

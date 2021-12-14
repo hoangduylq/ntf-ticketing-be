@@ -29,7 +29,11 @@ export class EventController {
   @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
   async createEvent(@Body() model: EventDto) {
-    return this.eventService.create(model);
+    try {
+      return this.eventService.create(model);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Put('/:eventId')
@@ -37,33 +41,43 @@ export class EventController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   async updateEvent(
-    @Request() req,
     @Param('eventId') eventId: string,
     @Body() eventInfo: EventDto,
   ): Promise<any> {
-    const { user } = req;
-    return await this.eventService.updateEventDetail(
-      eventId,
-      user.id,
-      eventInfo,
-    );
+    try {
+      return await this.eventService.updateEventDetail(eventId, eventInfo);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+  @Get('/paging')
+  async getAllEvent(@Query() query: PaginationEvent): Promise<EventEntity[]> {
+    try {
+      const { page, pageSize, ...rest } = query || {};
+      return await this.eventService.getEventPaging(rest, {
+        page,
+        pageSize,
+      } as Pagination);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get('/:eventId')
   async getEvent(@Param('eventId') eventId: string): Promise<EventEntity> {
-    return await this.eventService.getEventById(eventId);
+    try {
+      return await this.eventService.getEventById(eventId);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
-  @Get()
-  async getAllEvent(@Query() query: PaginationEvent): Promise<EventEntity[]> {
+  @Get('')
+  async getEvents(): Promise<EventEntity[]> {
     try {
-      const { page, pageSize, ...rest } = query || {};
-      return await this.eventService.getAllEvent(rest, {
-        page,
-        pageSize,
-      } as Pagination);
-    } catch (err) {
-      throw new HttpException(err?.message, HttpStatus.BAD_REQUEST);
+      return await this.eventService.getEvents();
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
   }
 }

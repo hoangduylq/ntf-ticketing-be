@@ -3,22 +3,52 @@ import { StatusEventEnum } from './../domain/enums/status.enum';
 import { EventDto, PaginationEvent } from '../dto/event.dto';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
 import { Like, Repository } from 'typeorm';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
+    @Inject(REQUEST) private readonly req: any,
   ) {}
 
-  async getAllEvent(
+  async create(createEventDto: EventDto): Promise<any> {
+    try {
+      const newEvent = this.eventRepository.create(createEventDto);
+      await this.eventRepository.save(newEvent);
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Create Event Successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException(error?.message);
+    }
+  }
+
+  async getEvents(): Promise<EventEntity[]> {
+    try {
+      return await this.eventRepository.find();
+    } catch (error) {
+      throw new BadRequestException(error?.message);
+    }
+  }
+
+  async getEventPaging(
     query: PaginationEvent,
     pagination: Pagination,
   ): Promise<EventEntity[]> {
     try {
-      const { page = 1, pageSize = 0 } = pagination;
+      const { page = 1, pageSize = 5 } = pagination;
       const skipAmount = (page - 1) * pageSize;
 
       for (const field in query) {
@@ -35,11 +65,8 @@ export class EventService {
           categoryId: 'ASC',
         },
       });
-    } catch (err) {
-      throw new HttpException(
-        `[EventService]: ${err?.message}`,
-        HttpStatus.BAD_REQUEST,
-      );
+    } catch (error) {
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -47,24 +74,11 @@ export class EventService {
     try {
       const event = this.eventRepository.findOneOrFail({ id });
       if (!event) {
-        throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+        throw new NotFoundException('Event not found');
       }
       return event;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async create(createEventDto: EventDto): Promise<any> {
-    try {
-      const newEvent = this.eventRepository.create(createEventDto);
-      await this.eventRepository.save(newEvent);
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: 'Create Event Successfully',
-      };
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
@@ -78,25 +92,22 @@ export class EventService {
       const eventUpdated = this.eventRepository.save(event);
       return eventUpdated;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
-  async updateEventDetail(
-    id: string,
-    userId: string,
-    eventDetail: any,
-  ): Promise<any> {
+  async updateEventDetail(id: string, eventDetail: any): Promise<any> {
     try {
+      const user = this.req.user;
       const event = await this.getEventById(id);
-      if (event.userId === userId) {
+      if (event.userId === user.id) {
         const result = await this.eventRepository.update(event.id, eventDetail);
         return result;
       } else {
-        throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
+        throw new UnauthorizedException('Permission Denied');
       }
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(error?.message);
     }
   }
 
