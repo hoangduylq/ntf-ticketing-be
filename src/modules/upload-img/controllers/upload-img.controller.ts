@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { query } from 'express';
 
 @Controller('image')
 @ApiTags('image')
@@ -32,18 +31,16 @@ export class UploadController {
   })
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
-    const result = await this.uploadImageServivce.uploadImageWithCloudinary(
-      file,
-    );
-    console.log(result);
-    return { url: result };
+    const result: any =
+      await this.uploadImageServivce.uploadImageWithCloudinary(file);
+    return { url: result.url, publicId: result['public_id'] };
   }
 
   @Delete('/:publicId')
-  async deleteImage(@Query('publicId') publicId: string) {
+  async deleteImage(@Param('publicId') publicId: string) {
     const result = await this.uploadImageServivce.deleteImageInCloundinary(
       publicId,
     );
-    return { result };
+    return { isDeleted: result };
   }
 }

@@ -1,17 +1,13 @@
-import { getDataError } from 'src/shared/json-format';
 import { UserService } from './../../user/services/user.service';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Role } from '../decorator/role.decorator';
 
 export interface IJwtPayload {
-  id: string | number;
+  id: string;
   username: string;
-  name: string;
-  email: string;
-  role: Role;
+  role: string;
 }
 
 @Injectable()

@@ -49,9 +49,9 @@ export class UploadImgServie {
 
   async deleteImageInCloundinary(publicId: string) {
     try {
-      cloudinary.api.delete_resources([publicId], function (error, result) {
-        return result;
-      });
+      const result = await cloudinary.api.delete_resources([publicId]);
+      const isDeleted = result.deleted[publicId] === 'deleted';
+      return isDeleted;
     } catch (err) {
       throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

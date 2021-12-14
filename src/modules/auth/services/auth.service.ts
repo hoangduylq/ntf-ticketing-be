@@ -1,3 +1,4 @@
+import { IJwtPayload } from './../strategies/jwt.strategy';
 import { ILogin } from './../../event/domain/interfaces/login.interface';
 import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
@@ -73,11 +74,9 @@ export class AuthService {
   }
 
   async generateToken(user: UserEntity): Promise<string> {
-    const payload = {
+    const payload: IJwtPayload = {
       username: user.username,
       id: user.id,
-      email: user.email,
-      name: user.name,
       role: user.role.name,
     };
     const accessToken: string = await this.jwtService.sign(payload);

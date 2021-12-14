@@ -4,8 +4,6 @@ import { RoleService } from '../../role-permission/services/role.service';
 import {
   ConflictException,
   Injectable,
-  HttpException,
-  HttpStatus,
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
@@ -22,7 +20,7 @@ export class UserService {
     private roleService: RoleService,
   ) {}
 
-  async findUserByEmail(email: string): Promise<any> {
+  async findUserByEmail(email: string): Promise<UserEntity> {
     const user = await this.userRespository.findOne({ email });
     return user;
   }
