@@ -1,21 +1,15 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { v2 as cloudinary } from 'cloudinary';
+import {
+  UploadApiErrorResponse,
+  UploadApiResponse,
+  v2 as cloudinary,
+} from 'cloudinary';
 import toStream = require('buffer-to-stream');
-
-// cloudinary.config({
-//   cloud_name: process.env.CLOUD_NAME,
-//   api_key: process.env.API_KEY,
-//   api_secret: process.env.API_SECRET,
-// });
-cloudinary.config({
-  cloud_name: 'dnhxzvdy2',
-  api_key: '786919995595549',
-  api_secret: 'WHgCpYeoOjmvHjkGkLs5do5NAZA',
-});
-
 @Injectable()
-export class UploadImgServie {
-  async uploadImageWithCloudinary(file: Express.Multer.File) {
+export class UploadImgService {
+  async uploadImageWithCloudinary(
+    file: Express.Multer.File,
+  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     try {
       if (!file)
         throw new HttpException(

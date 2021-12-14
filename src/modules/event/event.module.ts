@@ -1,4 +1,4 @@
-import { UploadImgServie } from './../upload-img/services/upload-img.services';
+import { UploadImgService } from './../upload-img/services/upload-img.services';
 import { EventCategoryController } from './controllers/event-category.controller';
 import { EventController } from './controllers/event.controller';
 import { EventCategoryServie } from './services/event-category.service';
@@ -12,6 +12,6 @@ import { EventService } from './services/event.service';
   imports: [TypeOrmModule.forFeature([EventEntity, EventCategoryEntity])],
   exports: [EventService, EventCategoryServie],
   controllers: [EventController, EventCategoryController],
-  providers: [EventService, EventCategoryServie, UploadImgServie],
+  providers: [EventService, EventCategoryServie, UploadImgService],
 })
 export class EventModule {}

@@ -1,11 +1,10 @@
-import { UploadImgServie } from '../services/upload-img.services';
+import { UploadImgService } from './../services/upload-img.services';
 import {
   Controller,
   Post,
   UseInterceptors,
   UploadedFile,
   Delete,
-  Param,
   Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,7 +13,7 @@ import { ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
 @Controller('image')
 @ApiTags('image')
 export class UploadController {
-  constructor(private readonly uploadImageServivce: UploadImgServie) {}
+  constructor(private readonly uploadImageServivce: UploadImgService) {}
 
   @Post('')
   @ApiConsumes('multipart/form-data')
