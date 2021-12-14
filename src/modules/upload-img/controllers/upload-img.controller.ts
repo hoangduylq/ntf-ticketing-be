@@ -5,7 +5,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Delete,
-  Query,
+  Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';

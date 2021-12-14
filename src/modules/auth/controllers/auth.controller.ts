@@ -18,11 +18,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Get('facebook')
   async getTokenAfterFacebookSignIn(@Query() query) {
-    try {
-      return this.authService.loginWithFacebook(query.access_token);
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    return this.authService.loginWithFacebook(query.access_token);
   }
 
   @Post('login')

@@ -1,3 +1,4 @@
+import { EventCategoryEntity } from './../domain/entities/eventCategory.entity';
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { EventCategoryServie } from '../services/event-category.service';
@@ -8,7 +9,7 @@ export class EventCategoryController {
   constructor(private readonly cateogryService: EventCategoryServie) {}
 
   @Get('')
-  getAllCategories() {
+  getAllCategories(): Promise<EventCategoryEntity[]> {
     return this.cateogryService.getAll();
   }
 }

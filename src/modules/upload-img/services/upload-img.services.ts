@@ -11,6 +11,7 @@ export class UploadImgService {
     file: Express.Multer.File,
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     try {
+      console.log(file);
       if (!file)
         throw new HttpException(
           'No files were uploaded',

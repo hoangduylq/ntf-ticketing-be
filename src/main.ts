@@ -1,3 +1,4 @@
+import { AllExceptionsFilter } from './exceptions/exception-filter';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -41,6 +42,9 @@ async function bootstrap() {
     allowedHeaders: '*',
     origin: '*',
   });
+  // const { httpAdapter } = app.get(HttpAdapterHost);
+
+  // app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.listen(configService.get('port'));
 }

@@ -24,14 +24,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: IJwtPayload) {
-    try {
-      const user = await this.userService.getUserById(payload.id);
-      if (!user) {
-        return false;
-      }
-      return user;
-    } catch (error) {
-      throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
-    }
+    return {
+      username: payload.username,
+      id: payload.id,
+      role: payload.role,
+    };
   }
 }

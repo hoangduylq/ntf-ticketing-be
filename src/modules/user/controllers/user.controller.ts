@@ -3,8 +3,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Request,
@@ -25,18 +23,15 @@ export class UserController {
   @Roles(Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
-  getProfile(@Param('id') id: string) {
-    return this.userService.getUserById(id);
+  async getProfile(@Param('id') id: string) {
+    const res = await this.userService.getUserById(id);
+    return res;
   }
 
   @Post('signup')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signup(@Request() req, @Body() model: UserCredentialsDto) {
-    try {
-      return this.userService.signup(req.body);
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    return this.userService.signup(req.body);
   }
 
   @Get('')
@@ -44,10 +39,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   async getAllProfile() {
-    try {
-      return await this.userService.getAllUser();
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    return await this.userService.getAllUser();
   }
 }
