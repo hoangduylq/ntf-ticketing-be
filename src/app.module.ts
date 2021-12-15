@@ -11,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { join } from 'path';
 import { OrderModule } from './modules/order/order.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { OrderModule } from './modules/order/order.module';
     OrderModule,
     EventModule,
     UploadImgModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

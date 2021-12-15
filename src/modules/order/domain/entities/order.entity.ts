@@ -1,4 +1,4 @@
-import { BankEntity } from '../../../user/domain/entities/bank.entity';
+import { BankEntity } from '../../../payment/domain/entities/bank.entity';
 import { UserEntity } from './../../../user/domain/entities/user.entity';
 import {
   BaseEntity,

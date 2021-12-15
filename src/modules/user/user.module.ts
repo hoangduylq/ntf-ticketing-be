@@ -4,9 +4,13 @@ import { UserController } from './controllers/user.controller';
 import { UserService } from './services/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
+import { BankRepository } from '../payment/infrastructure/bank.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepository]), RolePermissionModule],
+  imports: [
+    TypeOrmModule.forFeature([UserRepository, BankRepository]),
+    RolePermissionModule,
+  ],
   exports: [UserService],
   controllers: [UserController],
   providers: [UserService],

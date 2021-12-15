@@ -1,14 +1,14 @@
-import { UserEntity } from './../../../user/domain/entities/user.entity';
+import { UserEntity } from '../../../user/domain/entities/user.entity';
 import {
   BaseEntity,
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { OrderEntity } from './order.entity';
+import { OrderEntity } from '../../../order/domain/entities/order.entity';
 
 @Entity({ name: 'Bank' })
 export class BankEntity extends BaseEntity {
@@ -18,12 +18,12 @@ export class BankEntity extends BaseEntity {
   @Column({ nullable: false, type: 'varchar' })
   name!: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', name: 'userId' })
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @OneToOne(() => UserEntity)
   @JoinColumn({ name: 'userId' })
-  user: UserEntity;
+  user!: UserEntity;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   cardHolderName!: string;

@@ -12,7 +12,6 @@ import {
 } from 'typeorm';
 import { GenderEnum } from '../enums/gender.enum';
 import { RoleEntity } from './../../../role-permission/domain/entities/role.entity';
-import { BankEntity } from './../../../order/domain/entities/bank.entity';
 import { OrderEntity } from './../../../order/domain/entities/order.entity';
 
 @Entity({ name: 'User' })
@@ -69,9 +68,6 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => EventEntity, (event) => event.user)
   events: EventEntity[];
-
-  @OneToMany(() => BankEntity, (bank) => bank.user)
-  banks: BankEntity[];
 
   @OneToMany(() => OrderEntity, (order) => order.user)
   orders: OrderEntity[];

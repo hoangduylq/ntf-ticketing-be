@@ -4,8 +4,6 @@ import { RoleService } from '../../role-permission/services/role.service';
 import {
   ConflictException,
   Injectable,
-  HttpException,
-  HttpStatus,
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';

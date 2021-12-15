@@ -13,6 +13,9 @@ export class WalletEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
+  @Column({ type: 'uuid', name: 'userId' })
+  userId: string;
+
   @OneToOne(() => UserEntity)
   @JoinColumn()
   user: UserEntity;
