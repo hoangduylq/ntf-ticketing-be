@@ -29,11 +29,7 @@ export class EventController {
   @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
   async createEvent(@Body() model: EventDto) {
-    try {
-      return this.eventService.create(model);
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    return this.eventService.create(model);
   }
 
   @Put('/:eventId')
@@ -44,40 +40,24 @@ export class EventController {
     @Param('eventId') eventId: string,
     @Body() eventInfo: EventDto,
   ): Promise<any> {
-    try {
-      return await this.eventService.updateEventDetail(eventId, eventInfo);
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    return await this.eventService.updateEventDetail(eventId, eventInfo);
   }
   @Get('/paging')
   async getAllEvent(@Query() query: PaginationEvent): Promise<EventEntity[]> {
-    try {
-      const { page, pageSize, ...rest } = query || {};
-      return await this.eventService.getEventPaging(rest, {
-        page,
-        pageSize,
-      } as Pagination);
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    const { page, pageSize, ...rest } = query || {};
+    return await this.eventService.getEventPaging(rest, {
+      page,
+      pageSize,
+    } as Pagination);
   }
 
   @Get('/:eventId')
   async getEvent(@Param('eventId') eventId: string): Promise<EventEntity> {
-    try {
-      return await this.eventService.getEventById(eventId);
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    return await this.eventService.getEventById(eventId);
   }
 
   @Get('')
   async getEvents(): Promise<EventEntity[]> {
-    try {
-      return await this.eventService.getEvents();
-    } catch (error) {
-      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
-    }
+    return await this.eventService.getEvents();
   }
 }

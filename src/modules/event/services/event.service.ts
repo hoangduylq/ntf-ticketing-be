@@ -5,7 +5,6 @@ import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
 import { Like, Repository } from 'typeorm';
 import {
   BadRequestException,
-  HttpStatus,
   Inject,
   Injectable,
   NotFoundException,
@@ -22,14 +21,11 @@ export class EventService {
     @Inject(REQUEST) private readonly req: any,
   ) {}
 
-  async create(createEventDto: EventDto): Promise<any> {
+  async create(createEventDto: EventDto): Promise<EventEntity> {
     try {
       const newEvent = this.eventRepository.create(createEventDto);
       await this.eventRepository.save(newEvent);
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: 'Create Event Successfully',
-      };
+      return newEvent;
     } catch (error) {
       throw new BadRequestException(error?.message);
     }
@@ -70,16 +66,12 @@ export class EventService {
     }
   }
 
-  async getEventById(id: string): Promise<EventEntity | undefined> {
-    try {
-      const event = this.eventRepository.findOneOrFail({ id });
-      if (!event) {
-        throw new NotFoundException('Event not found');
-      }
-      return event;
-    } catch (error) {
-      throw new BadRequestException(error?.message);
+  async getEventById(id: string): Promise<EventEntity> {
+    const event = this.eventRepository.findOneOrFail({ id });
+    if (!event) {
+      throw new NotFoundException('Event not found');
     }
+    return event;
   }
 
   async updateStatusEvent(
@@ -96,13 +88,16 @@ export class EventService {
     }
   }
 
-  async updateEventDetail(id: string, eventDetail: any): Promise<any> {
+  async updateEventDetail(id: string, eventDetail: any): Promise<EventEntity> {
     try {
       const user = this.req.user;
       const event = await this.getEventById(id);
       if (event.userId === user.id) {
-        const result = await this.eventRepository.update(event.id, eventDetail);
-        return result;
+        const eventUpdated = await this.eventRepository.save({
+          ...event,
+          ...eventDetail,
+        });
+        return eventUpdated;
       } else {
         throw new UnauthorizedException('Permission Denied');
       }

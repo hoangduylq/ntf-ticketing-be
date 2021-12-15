@@ -1,3 +1,4 @@
+import { IJwtPayload } from './../strategies/jwt.strategy';
 import { ILogin } from './../../event/domain/interfaces/login.interface';
 import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
@@ -29,6 +30,7 @@ export class AuthService {
       if (user && (await bcrypt.compare(password, user.password))) {
         const role = await this.roleService.getRoleById(user.roleId);
         const payload = {
+          id: user.id,
           email: user.email,
           name: user.name,
           role: role.name,
@@ -54,9 +56,10 @@ export class AuthService {
 
       if (user) {
         const internalUser = await this.usersService.signup(user);
-        const { email, name, roleId } = internalUser;
+        const { email, name, roleId, id } = internalUser;
         const role = await this.roleService.getRoleById(roleId);
         const payload = {
+          id,
           email,
           name,
           role: role.name,
@@ -73,11 +76,9 @@ export class AuthService {
   }
 
   async generateToken(user: UserEntity): Promise<string> {
-    const payload = {
+    const payload: IJwtPayload = {
       username: user.username,
       id: user.id,
-      email: user.email,
-      name: user.name,
       role: user.role.name,
     };
     const accessToken: string = await this.jwtService.sign(payload);

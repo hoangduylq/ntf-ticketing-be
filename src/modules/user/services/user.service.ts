@@ -4,8 +4,8 @@ import { RoleService } from '../../role-permission/services/role.service';
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -20,7 +20,7 @@ export class UserService {
     private roleService: RoleService,
   ) {}
 
-  async findUserByEmail(email: string): Promise<any> {
+  async findUserByEmail(email: string): Promise<UserEntity> {
     const user = await this.userRespository.findOne({ email });
     return user;
   }
@@ -62,17 +62,9 @@ export class UserService {
   }
 
   async getUserById(id: string | number): Promise<UserEntity> {
-    try {
-      const user = await this.userRespository.findOne(id);
-
-      if (!user) {
-        throw new NotFoundException('User does not exist ');
-      }
-
-      return user;
-    } catch (error) {
-      throw new BadRequestException(error?.message);
-    }
+    const user = await this.userRespository.findOne(id);
+    if (!user) throw new NotFoundException('Not found');
+    return user;
   }
 
   async getAllUser(): Promise<UserEntity[]> {

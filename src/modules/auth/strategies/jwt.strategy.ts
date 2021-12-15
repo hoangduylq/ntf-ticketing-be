@@ -1,17 +1,13 @@
-import { getDataError } from 'src/shared/json-format';
 import { UserService } from './../../user/services/user.service';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Role } from '../decorator/role.decorator';
 
 export interface IJwtPayload {
-  id: string | number;
+  id: string;
   username: string;
-  name: string;
-  email: string;
-  role: Role;
+  role: string;
 }
 
 @Injectable()
@@ -28,14 +24,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: IJwtPayload) {
-    try {
-      const user = await this.userService.getUserById(payload.id);
-      if (!user) {
-        return false;
-      }
-      return user;
-    } catch (error) {
-      throw new HttpException('Permission Denied', HttpStatus.UNAUTHORIZED);
-    }
+    return {
+      username: payload.username,
+      id: payload.id,
+      role: payload.role,
+    };
   }
 }

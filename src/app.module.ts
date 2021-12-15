@@ -12,6 +12,8 @@ import configuration from './config/configuration';
 import { join } from 'path';
 import { OrderModule } from './modules/order/order.module';
 import { PaymentModule } from './modules/payment/payment.module';
+import { APP_FILTER } from '@nestjs/core';
+import { AllExceptionsFilter } from './exceptions/exception-filter';
 
 @Module({
   imports: [
@@ -44,6 +46,12 @@ import { PaymentModule } from './modules/payment/payment.module';
     PaymentModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
 export class AppModule {}

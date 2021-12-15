@@ -7,5 +7,4 @@ export enum Role {
 
 export const ROLES_KEY = 'roles';
 
-//set all role name in db into ROLES_KEY
 export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
