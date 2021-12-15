@@ -33,7 +33,7 @@ export class PaymentController {
   }
 
   @Patch('bank/:userId')
-  async updateBank(@Param('userid') userId: string, @Body() bankDto: BankDto) {
+  async updateBank(@Param('userId') userId: string, @Body() bankDto: BankDto) {
     try {
       return this.bankService.update(userId, bankDto);
     } catch (error) {
@@ -42,7 +42,7 @@ export class PaymentController {
   }
 
   @Get('bank/:userId')
-  async getBank(@Param('userid') userId: string) {
+  async getBank(@Param('userId') userId: string) {
     try {
       return this.bankService.find(userId);
     } catch (error) {
@@ -51,7 +51,7 @@ export class PaymentController {
   }
 
   @Delete('bank/:userId')
-  async removeBank(@Param('userid') userId: string) {
+  async removeBank(@Param('userId') userId: string) {
     return this.bankService.delete(userId);
   }
 
@@ -66,7 +66,7 @@ export class PaymentController {
 
   @Patch('wallet/:userId')
   async updateWallet(
-    @Param('userid') userId: string,
+    @Param('userId') userId: string,
     @Body() walletDto: WalletDto,
   ) {
     try {
@@ -77,7 +77,7 @@ export class PaymentController {
   }
 
   @Get('wallet/:userId')
-  async getWallet(@Param('userid') userId: string) {
+  async getWallet(@Param('userId') userId: string) {
     try {
       return this.walletService.find(userId);
     } catch (error) {
@@ -86,7 +86,7 @@ export class PaymentController {
   }
 
   @Delete('wallet/:userId')
-  async removeWallet(@Param('userid') userId: string) {
+  async removeWallet(@Param('userId') userId: string) {
     return this.walletService.delete(userId);
   }
 }
