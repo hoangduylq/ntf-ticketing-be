@@ -1,10 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-export class BankDto {
+export class BankUpdateDto {
   @ApiProperty()
   name?: string;
-
-  @ApiProperty()
-  userId!: string;
 
   @ApiProperty()
   cardHolderName?: string;

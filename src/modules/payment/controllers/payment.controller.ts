@@ -10,7 +10,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { BankUpdateDto } from '../dto/bank-update.dto';
 import { BankDto } from '../dto/bank.dto';
+import { WalletUpdateDto } from '../dto/wallet-update.dto';
 import { WalletDto } from '../dto/wallet.dto';
 import { BankService } from '../services/bank.service';
 import { WalletService } from '../services/wallet.service';
@@ -33,9 +35,12 @@ export class PaymentController {
   }
 
   @Patch('/bank/:userId')
-  async updateBank(@Param('userId') userId: string, @Body() bankDto: BankDto) {
+  async updateBank(
+    @Param('userId') userId: string,
+    @Body() bankUpdateDto: BankUpdateDto,
+  ) {
     try {
-      return this.bankService.update(userId, bankDto);
+      return this.bankService.update(userId, bankUpdateDto);
     } catch (error) {
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
@@ -67,10 +72,10 @@ export class PaymentController {
   @Patch('/wallet/:userId')
   async updateWallet(
     @Param('userId') userId: string,
-    @Body() walletDto: WalletDto,
+    @Body() walletUpdateDto: WalletUpdateDto,
   ) {
     try {
-      return this.walletService.update(userId, walletDto);
+      return this.walletService.update(userId, walletUpdateDto);
     } catch (error) {
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }

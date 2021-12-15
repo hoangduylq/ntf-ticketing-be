@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WalletEntity } from '../domain/entities/wallet.entity';
+import { WalletUpdateDto } from '../dto/wallet-update.dto';
 import { WalletDto } from '../dto/wallet.dto';
 import { WalletRepository } from '../infrastructure/wallet.entity';
 import { UserService } from './../../user/services/user.service';
@@ -27,9 +28,11 @@ export class WalletService {
     }
   }
 
-  async update(userId: string, walletDto: WalletDto): Promise<boolean> {
+  async update(
+    userId: string,
+    walletUpdateDto: WalletUpdateDto,
+  ): Promise<boolean> {
     try {
-      const { walletAddress } = walletDto;
       const user = await this.userService.getUserById(userId);
       if (user) {
         await this.walletRespository.update(
@@ -37,7 +40,7 @@ export class WalletService {
             userId: userId,
           },
           {
-            walletAddress,
+            ...walletUpdateDto,
           },
         );
         return true;

@@ -4,6 +4,7 @@ import { UserService } from './../../user/services/user.service';
 import { BankEntity } from '../domain/entities/bank.entity';
 import { BankDto } from '../dto/bank.dto';
 import { BankRepository } from '../infrastructure/bank.repository';
+import { BankUpdateDto } from '../dto/bank-update.dto';
 
 @Injectable()
 export class BankService {
@@ -27,9 +28,8 @@ export class BankService {
     }
   }
 
-  async update(userId: string, bankDto: BankDto): Promise<boolean> {
+  async update(userId: string, bankUpdateDto: BankUpdateDto): Promise<boolean> {
     try {
-      const { name, cardHolderName, creditNumber } = bankDto;
       const user = await this.userService.getUserById(userId);
       if (user) {
         await this.bankRespository.update(
@@ -37,9 +37,7 @@ export class BankService {
             userId: userId,
           },
           {
-            name,
-            cardHolderName,
-            creditNumber,
+            ...bankUpdateDto,
           },
         );
         return true;
