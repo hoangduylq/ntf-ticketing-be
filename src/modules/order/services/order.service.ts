@@ -1,61 +1,40 @@
 import { IPaginateOptions } from '../domain/interfaces/paginate_options.interface';
 import { EventService } from '../../event/services/event.service';
-import { TicketService } from '../../ticket/services/ticket.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDto } from '../dto/order.dto';
 import { OrderRepository } from '../infrastructure/order.repository';
-import { StatusEnum } from '../../ticket/domain/enums/status.enum';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectRepository(OrderRepository) private orderRepository: OrderRepository,
-    private ticketService: TicketService,
+    @InjectRepository(OrderRepository)
+    private orderRepository: OrderRepository,
+    @InjectQueue('order-queue') private orderQueue: Queue,
     private eventService: EventService,
   ) {}
 
-  async create(orderDto: OrderDto): Promise<any> {
+  async create(orderDto: OrderDto): Promise<boolean> {
     try {
-      const { eventId, userId, bankId, amount } = orderDto;
+      const { eventId, amount } = orderDto;
       const event = await this.eventService.getEventById(eventId);
       if (amount <= event.availableTickets && event.status === 'Ready') {
-        await this.eventService.updateAvaiableTickets(eventId, amount);
-        const tickets = [];
-        for (let i = 1; i <= amount; i++) {
-          const entity = await this.ticketService.getTicketReady(eventId);
-          const [ticket] = entity;
-          if (ticket) {
-            tickets.push(ticket.nftToken);
-            await this.ticketService.update(ticket.id, {
-              status: StatusEnum.Sold,
-            });
-          } else {
-            //
-          }
+        const newOrder = await this.orderRepository.create(orderDto);
+        const { id } = await this.orderRepository.save(newOrder);
+
+        for (let count = 1; count <= amount; count++) {
+          await this.orderQueue.add('order-job', {
+            id: id,
+            amount,
+            eventId,
+          });
         }
-        const newOrder = {
-          eventId,
-          userId,
-          bankId,
-          amount,
-          tickets,
-        };
-
-        console.log(newOrder);
-
-        const result = await this.orderRepository.save(newOrder);
-        const dto: OrderDto = {
-          eventId: result.eventId,
-          userId: result.userId,
-          bankId: result.bankId,
-          amount: result.amount,
-          tickets: result.tickets,
-        };
-        return dto;
       }
+      return true;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      return false;
     }
   }
 
@@ -74,9 +53,9 @@ export class OrderService {
     return entity;
   }
 
-  async paginate(options: IPaginateOptions) {
+  async paging(options: IPaginateOptions) {
     try {
-      const { orderId, page, limit } = options;
+      const { orderId, page = 1, limit = 5 } = options;
 
       const entities = await this.orderRepository.find({
         where: {

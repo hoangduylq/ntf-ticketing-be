@@ -1,4 +1,4 @@
-import { BankEntity } from './../../../order/domain/entities/bank.entity';
+import { BankEntity } from '../../../user/domain/entities/bank.entity';
 import { UserEntity } from './../../../user/domain/entities/user.entity';
 import {
   BaseEntity,
@@ -42,8 +42,8 @@ export class OrderEntity extends BaseEntity {
   @Column({ nullable: false, type: 'float' })
   amount!: number;
 
-  @Column('simple-array')
-  tickets: string[];
+  @Column({ nullable: true, type: 'simple-array' })
+  tickets?: string[];
 
   @Column({
     type: 'enum',

@@ -20,4 +20,6 @@ export class OrderDto {
 
   @ApiProperty()
   tickets?: string[];
+
+  count?: number;
 }

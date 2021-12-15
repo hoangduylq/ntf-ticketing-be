@@ -10,7 +10,6 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { join } from 'path';
-import { TicketModule } from './modules/ticket/ticket.module';
 import { OrderModule } from './modules/order/order.module';
 
 @Module({
@@ -38,7 +37,6 @@ import { OrderModule } from './modules/order/order.module';
     AuthModule,
     UserModule,
     RolePermissionModule,
-    TicketModule,
     OrderModule,
     EventModule,
     UploadImgModule,
