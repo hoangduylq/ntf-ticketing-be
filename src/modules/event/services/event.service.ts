@@ -88,13 +88,16 @@ export class EventService {
     }
   }
 
-  async updateEventDetail(id: string, eventDetail: any): Promise<any> {
+  async updateEventDetail(id: string, eventDetail: any): Promise<EventEntity> {
     try {
       const user = this.req.user;
       const event = await this.getEventById(id);
       if (event.userId === user.id) {
-        const result = await this.eventRepository.update(event.id, eventDetail);
-        return result;
+        const eventUpdated = await this.eventRepository.save({
+          ...event,
+          ...eventDetail,
+        });
+        return eventUpdated;
       } else {
         throw new UnauthorizedException('Permission Denied');
       }
