@@ -30,6 +30,7 @@ export class AuthService {
       if (user && (await bcrypt.compare(password, user.password))) {
         const role = await this.roleService.getRoleById(user.roleId);
         const payload = {
+          id: user.id,
           email: user.email,
           name: user.name,
           role: role.name,
@@ -55,9 +56,10 @@ export class AuthService {
 
       if (user) {
         const internalUser = await this.usersService.signup(user);
-        const { email, name, roleId } = internalUser;
+        const { email, name, roleId, id } = internalUser;
         const role = await this.roleService.getRoleById(roleId);
         const payload = {
+          id,
           email,
           name,
           role: role.name,
