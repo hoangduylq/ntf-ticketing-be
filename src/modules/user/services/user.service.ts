@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserCredentialsDto } from '../dto/user-credential.dto';
 import { UserDto } from '../dto/user.dto';
+import { UserUpdateDto } from '../dto/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -72,6 +73,22 @@ export class UserService {
       return this.userRespository.find();
     } catch (error) {
       throw new BadRequestException(error?.message);
+    }
+  }
+
+  async update(id: string, userUpdateDto: UserUpdateDto): Promise<boolean> {
+    const user = await this.getUserById(id);
+    if (!user) return false;
+    if (user) {
+      await this.userRespository.update(
+        {
+          id: id,
+        },
+        {
+          ...userUpdateDto,
+        },
+      );
+      return true;
     }
   }
 }

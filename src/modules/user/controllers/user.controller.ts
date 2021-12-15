@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -13,6 +14,7 @@ import { Role, Roles } from 'src/modules/auth/decorator/role.decorator';
 import { UserCredentialsDto } from '../dto/user-credential.dto';
 import { UserService } from '../services/user.service';
 import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
+import { UserUpdateDto } from '../dto/user-update.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -32,6 +34,11 @@ export class UserController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signup(@Request() req, @Body() model: UserCredentialsDto) {
     return this.userService.signup(req.body);
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() userUpdateDto: UserUpdateDto) {
+    return this.userService.update(id, userUpdateDto);
   }
 
   @Get('')

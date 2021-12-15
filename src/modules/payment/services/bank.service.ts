@@ -29,20 +29,18 @@ export class BankService {
   }
 
   async update(userId: string, bankUpdateDto: BankUpdateDto): Promise<boolean> {
-    try {
-      const user = await this.userService.getUserById(userId);
-      if (user) {
-        await this.bankRespository.update(
-          {
-            userId: userId,
-          },
-          {
-            ...bankUpdateDto,
-          },
-        );
-        return true;
-      }
-    } catch (error) {
+    const bank = await this.find(userId);
+    if (bank) {
+      await this.bankRespository.update(
+        {
+          userId: userId,
+        },
+        {
+          ...bankUpdateDto,
+        },
+      );
+      return true;
+    } else {
       return false;
     }
   }

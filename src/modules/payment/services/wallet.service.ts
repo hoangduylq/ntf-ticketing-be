@@ -32,20 +32,18 @@ export class WalletService {
     userId: string,
     walletUpdateDto: WalletUpdateDto,
   ): Promise<boolean> {
-    try {
-      const user = await this.userService.getUserById(userId);
-      if (user) {
-        await this.walletRespository.update(
-          {
-            userId: userId,
-          },
-          {
-            ...walletUpdateDto,
-          },
-        );
-        return true;
-      }
-    } catch (error) {
+    const wallet = await this.find(userId);
+    if (wallet) {
+      await this.walletRespository.update(
+        {
+          userId: userId,
+        },
+        {
+          ...walletUpdateDto,
+        },
+      );
+      return true;
+    } else {
       return false;
     }
   }
