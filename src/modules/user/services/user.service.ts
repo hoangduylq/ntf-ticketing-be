@@ -1,3 +1,4 @@
+import { Role } from 'src/modules/auth/decorator/role.decorator';
 import { UserEntity } from './../domain/entities/user.entity';
 import { UserRepository } from './../infrastructure/user.repository';
 import { RoleService } from '../../role-permission/services/role.service';
@@ -6,12 +7,16 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  Inject,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserCredentialsDto } from '../dto/user-credential.dto';
 import { UserDto } from '../dto/user.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
+import { REQUEST } from '@nestjs/core';
+import { IJwtPayload } from 'src/modules/auth/strategies/jwt.strategy';
 
 @Injectable()
 export class UserService {
@@ -19,6 +24,7 @@ export class UserService {
     @InjectRepository(UserRepository)
     private userRespository: UserRepository,
     private roleService: RoleService,
+    @Inject(REQUEST) private readonly req: any,
   ) {}
 
   async findUserByEmail(email: string): Promise<UserEntity> {
@@ -63,9 +69,20 @@ export class UserService {
   }
 
   async getUserById(id: string | number): Promise<UserEntity> {
-    const user = await this.userRespository.findOne(id);
-    if (!user) throw new NotFoundException('Not found');
-    return user;
+    const userReq: IJwtPayload = this.req.user;
+
+    if (userReq) {
+      if (
+        userReq.role === Role.Admin ||
+        (userReq.role === Role.User && userReq.id === id)
+      ) {
+        const user = await this.userRespository.findOne(id);
+        if (!user) throw new NotFoundException('Not found');
+        return user;
+      } else {
+        throw new UnauthorizedException('Permission denied');
+      }
+    }
   }
 
   async getAllUser(): Promise<UserEntity[]> {

@@ -24,7 +24,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/:id')
-  @Roles(Role.User)
+  @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   async getProfile(@Param('id') id: string) {

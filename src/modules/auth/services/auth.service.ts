@@ -77,7 +77,7 @@ export class AuthService {
 
   async generateToken(user: UserEntity): Promise<string> {
     const payload: IJwtPayload = {
-      username: user.username,
+      email: user.email,
       id: user.id,
       role: user.role.name,
     };
