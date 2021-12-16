@@ -22,13 +22,13 @@ import { IJwtPayload } from 'src/modules/auth/strategies/jwt.strategy';
 export class UserService {
   constructor(
     @InjectRepository(UserRepository)
-    private userRespository: UserRepository,
+    private userRepository: UserRepository,
     private roleService: RoleService,
     @Inject(REQUEST) private readonly req: any,
   ) {}
 
   async findUserByEmail(email: string): Promise<UserEntity> {
-    const user = await this.userRespository.findOne({ email });
+    const user = await this.userRepository.findOne({ email });
     return user;
   }
 
@@ -42,7 +42,7 @@ export class UserService {
 
     const role = await this.roleService.findRole('user');
 
-    const newUser = this.userRespository.create({
+    const newUser = this.userRepository.create({
       email: email,
       username: password ? email : uidFacebook,
       name: name,
@@ -58,7 +58,7 @@ export class UserService {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const result = await this.userRespository.save(newUser);
+    const result = await this.userRepository.save(newUser);
     const dto: UserDto = {
       email: result.email,
       name: result.name,
@@ -70,13 +70,12 @@ export class UserService {
 
   async getUserById(id: string | number): Promise<UserEntity> {
     const userReq: IJwtPayload = this.req.user;
-
     if (userReq) {
       if (
         userReq.role === Role.Admin ||
         (userReq.role === Role.User && userReq.id === id)
       ) {
-        const user = await this.userRespository.findOne(id);
+        const user = await this.userRepository.findOne(id);
         if (!user) throw new NotFoundException('Not found');
         return user;
       } else {
@@ -87,26 +86,32 @@ export class UserService {
 
   async getAllUser(): Promise<UserEntity[]> {
     try {
-      return this.userRespository.find();
+      return this.userRepository.find();
     } catch (error) {
       throw new BadRequestException(error?.message);
     }
   }
 
   async update(id: string, userUpdateDto: UserUpdateDto): Promise<boolean> {
-    const user = await this.userRespository.findOne(id);
-    if (user) {
-      await this.userRespository.update(
-        {
-          id: id,
-        },
-        {
-          ...userUpdateDto,
-        },
-      );
-      return true;
-    } else {
-      return false;
+    const userReq = this.req.user;
+    console.log('start');
+    console.log(userReq);
+    if (userReq && userReq.id === id) {
+      console.log('executed');
+      const user = await this.userRepository.findOne(id);
+      if (user) {
+        const userUpdated = await this.userRepository.update(
+          {
+            id: id,
+          },
+          {
+            ...userUpdateDto,
+          },
+        );
+        return !!userUpdated.affected;
+      } else {
+        return false;
+      }
     }
   }
 }

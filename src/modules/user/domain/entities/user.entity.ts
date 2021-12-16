@@ -13,6 +13,7 @@ import {
 import { GenderEnum } from '../enums/gender.enum';
 import { RoleEntity } from './../../../role-permission/domain/entities/role.entity';
 import { OrderEntity } from './../../../order/domain/entities/order.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {
@@ -50,6 +51,7 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'uuid' })
   roleId!: string;
 
+  @Exclude()
   @ManyToOne(() => RoleEntity, (role) => role.id, { eager: true })
   @JoinColumn({ name: 'roleId' })
   role!: RoleEntity;

@@ -39,6 +39,9 @@ export class UserController {
   }
 
   @Patch('/:id')
+  @Roles(Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   async updateUser(
     @Param('id') id: string,
     @Body() userUpdateDto: UserUpdateDto,
