@@ -39,10 +39,15 @@ export class UserController {
   }
 
   @Patch('/:id')
-  async update(@Param('id') id: string, @Body() userUpdateDto: UserUpdateDto) {
-    console.log('id:', id);
-    console.log('userUpdateDto: ', userUpdateDto);
-    return this.userService.update(id, userUpdateDto);
+  async updateUser(
+    @Param('id') id: string,
+    @Body() userUpdateDto: UserUpdateDto,
+  ) {
+    try {
+      return this.userService.update(id, userUpdateDto);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get('')
