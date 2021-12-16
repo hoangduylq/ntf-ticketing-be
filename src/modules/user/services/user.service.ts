@@ -77,8 +77,7 @@ export class UserService {
   }
 
   async update(id: string, userUpdateDto: UserUpdateDto): Promise<boolean> {
-    const user = await this.getUserById(id);
-    if (!user) return false;
+    const user = await this.userRespository.findOne(id);
     if (user) {
       await this.userRespository.update(
         {
@@ -89,6 +88,8 @@ export class UserService {
         },
       );
       return true;
+    } else {
+      return false;
     }
   }
 }

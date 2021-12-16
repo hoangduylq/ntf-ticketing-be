@@ -15,15 +15,13 @@ export class WalletService {
   ) {}
 
   async create(walletDto: WalletDto): Promise<boolean> {
-    try {
-      const { userId } = walletDto;
-      const user = await this.userService.getUserById(userId);
-      if (user) {
-        const newWallet = await this.walletRespository.create(walletDto);
-        await this.walletRespository.save(newWallet);
-        return true;
-      }
-    } catch (error) {
+    const { userId } = walletDto;
+    const user = await this.userService.getUserById(userId);
+    if (user) {
+      const newWallet = await this.walletRespository.create(walletDto);
+      await this.walletRespository.save(newWallet);
+      return true;
+    } else {
       return false;
     }
   }

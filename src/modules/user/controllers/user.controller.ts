@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -36,8 +38,10 @@ export class UserController {
     return this.userService.signup(req.body);
   }
 
-  @Patch(':id')
+  @Patch('/:id')
   async update(@Param('id') id: string, @Body() userUpdateDto: UserUpdateDto) {
+    console.log('id:', id);
+    console.log('userUpdateDto: ', userUpdateDto);
     return this.userService.update(id, userUpdateDto);
   }
 

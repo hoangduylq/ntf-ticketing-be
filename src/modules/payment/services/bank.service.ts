@@ -15,15 +15,13 @@ export class BankService {
   ) {}
 
   async create(bankDto: BankDto): Promise<boolean> {
-    try {
-      const { userId } = bankDto;
-      const user = await this.userService.getUserById(userId);
-      if (user) {
-        const newBank = await this.bankRespository.create(bankDto);
-        await this.bankRespository.save(newBank);
-        return true;
-      }
-    } catch (error) {
+    const { userId } = bankDto;
+    const user = await this.userService.getUserById(userId);
+    if (user) {
+      const newBank = await this.bankRespository.create(bankDto);
+      await this.bankRespository.save(newBank);
+      return true;
+    } else {
       return false;
     }
   }
