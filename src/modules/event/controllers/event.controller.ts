@@ -26,8 +26,8 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post('')
-  @ApiConsumes('multipart/form-data')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   async createEvent(@Body() model: EventDto) {
     return this.eventService.create(model);
   }
@@ -42,6 +42,7 @@ export class EventController {
   ): Promise<any> {
     return await this.eventService.updateEventDetail(eventId, eventInfo);
   }
+
   @Get('/paging')
   async getAllEvent(@Query() query: PaginationEvent): Promise<EventEntity[]> {
     const { page, pageSize, ...rest } = query || {};

@@ -1,3 +1,4 @@
+import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
 import {
   Body,
   Controller,
@@ -5,17 +6,22 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  NotFoundException,
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BankUpdateDto } from '../dto/bank-update.dto';
 import { BankDto } from '../dto/bank.dto';
 import { WalletUpdateDto } from '../dto/wallet-update.dto';
 import { WalletDto } from '../dto/wallet.dto';
 import { BankService } from '../services/bank.service';
 import { WalletService } from '../services/wallet.service';
+
+import { JwtAuthGuard } from './../../auth/guards/jwt-auth.guard';
+import { Roles, Role } from 'src/modules/auth/decorator/role.decorator';
 
 @Controller('payment')
 @ApiTags('payment')
@@ -26,15 +32,19 @@ export class PaymentController {
   ) {}
 
   @Post('bank')
+  @Roles(Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   async createBank(@Body() bankDto: BankDto) {
     try {
-      return this.bankService.create(bankDto);
+      return await this.bankService.create(bankDto);
     } catch (error) {
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Patch('/bank/:userId')
+  @UseGuards(JwtAuthGuard)
   async updateBank(
     @Param('userId') userId: string,
     @Body() bankUpdateDto: BankUpdateDto,
@@ -49,7 +59,11 @@ export class PaymentController {
   @Get('/bank/:userId')
   async getBank(@Param('userId') userId: string) {
     try {
-      return this.bankService.find(userId);
+      const result = await this.bankService.find(userId);
+      if (!result) {
+        throw new NotFoundException('Not found');
+      }
+      return result;
     } catch (error) {
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }

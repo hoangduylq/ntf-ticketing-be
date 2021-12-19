@@ -1,3 +1,6 @@
+import { PaymentModule } from './../payment/payment.module';
+import { WalletService } from './../payment/services/wallet.service';
+import { BankService } from './../payment/services/bank.service';
 import { FacebookAuthModule } from 'facebook-auth-nestjs';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -34,6 +37,7 @@ import { UserRepository } from '../user/infrastructure/user.repository';
     TypeOrmModule.forFeature([UserRepository]),
     ConfigModule,
     UserModule,
+    PaymentModule,
     PassportModule,
     RolePermissionModule,
   ],

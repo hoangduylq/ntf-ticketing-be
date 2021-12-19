@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WalletEntity } from '../domain/entities/wallet.entity';
 import { WalletUpdateDto } from '../dto/wallet-update.dto';
 import { WalletDto } from '../dto/wallet.dto';
-import { WalletRepository } from '../infrastructure/wallet.entity';
+import { WalletRepository } from '../infrastructure/wallet.repository';
 import { UserService } from './../../user/services/user.service';
 
 @Injectable()

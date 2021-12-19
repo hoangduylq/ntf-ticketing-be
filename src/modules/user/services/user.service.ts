@@ -68,7 +68,7 @@ export class UserService {
     return dto;
   }
 
-  async getUserById(id: string | number): Promise<UserEntity> {
+  async getUserById(id: string): Promise<UserEntity> {
     const userReq: IJwtPayload = this.req.user;
     if (userReq) {
       if (
@@ -78,10 +78,10 @@ export class UserService {
         const user = await this.userRepository.findOne(id);
         if (!user) throw new NotFoundException('Not found');
         return user;
-      } else {
-        throw new UnauthorizedException('Permission denied');
       }
     }
+
+    throw new UnauthorizedException('Permission denied');
   }
 
   async getAllUser(): Promise<UserEntity[]> {
@@ -94,10 +94,7 @@ export class UserService {
 
   async update(id: string, userUpdateDto: UserUpdateDto): Promise<boolean> {
     const userReq = this.req.user;
-    console.log('start');
-    console.log(userReq);
     if (userReq && userReq.id === id) {
-      console.log('executed');
       const user = await this.userRepository.findOne(id);
       if (user) {
         const userUpdated = await this.userRepository.update(

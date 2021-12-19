@@ -1,5 +1,5 @@
 import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, Min } from 'class-validator';
+import { IsNotEmpty, IsOptional, Min } from 'class-validator';
 export class EventDto {
   @ApiProperty()
   @IsNotEmpty()
@@ -13,10 +13,6 @@ export class EventDto {
   @IsNotEmpty()
   @Min(1)
   totalTickets: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  availableTickets: number;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -55,34 +51,48 @@ export class EventDto {
 
   //optional
   @ApiProperty()
+  @IsOptional()
   logoUrl?: string;
 
   @ApiProperty()
+  @IsOptional()
   bannerUrl?: string;
 
   @ApiProperty()
+  @IsOptional()
   description?: string;
 
   @ApiProperty()
+  @IsOptional()
   eventPlaceName?: string;
 
   @ApiProperty()
+  @IsOptional()
   eventAddress?: string;
 
   @ApiProperty()
+  @IsOptional()
   ticketImageUrl?: string;
 
   @ApiProperty()
+  @IsOptional()
   organizationInfo?: string;
 
   @ApiProperty()
+  @IsOptional()
   organizationEmail?: string;
 
   @ApiProperty()
+  @IsOptional()
   organizationPhone?: string;
 
   @ApiProperty()
+  @IsOptional()
   organizationAddress?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  availableTickets?: number;
 }
 
 export class Pagination {

@@ -10,7 +10,7 @@ import { BankUpdateDto } from '../dto/bank-update.dto';
 export class BankService {
   constructor(
     @InjectRepository(BankRepository)
-    private bankRespository: BankRepository,
+    private bankRepository: BankRepository,
     private readonly userService: UserService,
   ) {}
 
@@ -18,18 +18,17 @@ export class BankService {
     const { userId } = bankDto;
     const user = await this.userService.getUserById(userId);
     if (user) {
-      const newBank = await this.bankRespository.create(bankDto);
-      await this.bankRespository.save(newBank);
-      return true;
-    } else {
-      return false;
+      const newBank = await this.bankRepository.create(bankDto);
+      const result = await this.bankRepository.save(newBank);
+      return !!result;
     }
+    return false;
   }
 
   async update(userId: string, bankUpdateDto: BankUpdateDto): Promise<boolean> {
     const bank = await this.find(userId);
     if (bank) {
-      await this.bankRespository.update(
+      await this.bankRepository.update(
         {
           userId: userId,
         },
@@ -44,13 +43,13 @@ export class BankService {
   }
 
   async find(userId: string): Promise<BankEntity> {
-    const entity = await this.bankRespository.findOne({ userId: userId });
+    const entity = await this.bankRepository.findOne({ userId: userId });
     return entity;
   }
 
   async delete(userId: string): Promise<boolean> {
     try {
-      await this.bankRespository.delete({ userId: userId });
+      await this.bankRepository.delete({ userId: userId });
       return true;
     } catch (error) {
       return false;
