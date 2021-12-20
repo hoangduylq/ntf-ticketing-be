@@ -47,11 +47,11 @@ export class EventService {
       const { page = 1, pageSize = 5 } = pagination;
       const skipAmount = (page - 1) * pageSize;
 
-      for (const field in query) {
-        if (typeof query[field] === 'string') {
-          query[field] = Like(`%${query[field]}%`);
-        }
-      }
+      // for (const field in query) {
+      //   if (typeof query[field] === 'string') {
+      //     query[field] = Like(`%${query[field]}%`);
+      //   }
+      // }
 
       return await this.eventRepository.find({
         where: query,
