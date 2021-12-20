@@ -17,7 +17,7 @@ import { RoleService } from 'src/modules/role-permission/services/role.service';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UserService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly facebookService: FacebookAuthService,
     private readonly roleService: RoleService,
@@ -25,7 +25,7 @@ export class AuthService {
 
   async login(userLogin: UserLoginDto): Promise<ILogin> {
     const { email, password } = userLogin;
-    const user = await this.usersService.findUserByEmail(email);
+    const user = await this.userService.findUserByEmail(email);
     if (user && !user.isSocial) {
       if (user && (await bcrypt.compare(password, user.password))) {
         const role = await this.roleService.getRoleById(user.roleId);
@@ -55,7 +55,7 @@ export class AuthService {
       );
 
       if (user) {
-        const internalUser = await this.usersService.signup(user);
+        const internalUser = await this.userService.signup(user);
         const { email, name, roleId, id } = internalUser;
         const role = await this.roleService.getRoleById(roleId);
         const payload = {
@@ -65,6 +65,28 @@ export class AuthService {
           role: role.name,
         };
         const accessToken = await this.generateToken(internalUser);
+        return { accessToken, payload };
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid access token');
+    }
+  }
+
+  async loginWithJwt(): Promise<ILogin> {
+    try {
+      const user = await this.userService.findUserByJWt();
+      if (user) {
+        const role = await this.roleService.getRoleById(user.roleId);
+        const payload = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: role.name,
+        };
+        const accessToken = await this.generateToken(user);
         return { accessToken, payload };
       }
     } catch (error) {

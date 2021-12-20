@@ -32,6 +32,13 @@ export class UserService {
     return user;
   }
 
+  async findUserByJWt(): Promise<UserEntity> {
+    const userReq: IJwtPayload = this.req.user;
+    const user = await this.userRepository.findOne(userReq.id);
+    if (!user) throw new NotFoundException('Not found');
+    return user;
+  }
+
   async signup(userCredential: UserCredentialsDto): Promise<any> {
     const { id: uidFacebook, email, name, gender, password } = userCredential;
     const isInvalidUser = await this.findUserByEmail(email);
