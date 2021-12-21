@@ -14,6 +14,8 @@ import { OrderModule } from './modules/order/order.module';
 import { PaymentModule } from './modules/payment/payment.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './exceptions/exception-filter';
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 
 @Module({
   imports: [
@@ -36,7 +38,10 @@ import { AllExceptionsFilter } from './exceptions/exception-filter';
         ssl: configService.get('database.ssl'),
       }),
     }),
-
+    AutomapperModule.forRoot({
+      options: [{ name: 'classMapper', pluginInitializer: classes }],
+      singular: true,
+    }),
     AuthModule,
     UserModule,
     RolePermissionModule,

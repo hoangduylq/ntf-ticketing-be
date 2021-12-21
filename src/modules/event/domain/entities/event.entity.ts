@@ -13,6 +13,7 @@ import {
 import { EventCategoryEntity } from './eventCategory.entity';
 import { UserEntity } from './../../../user/domain/entities/user.entity';
 import { OrderEntity } from './../../../order/domain/entities/order.entity';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'Event' })
 export class EventEntity extends BaseEntity {
@@ -34,9 +35,11 @@ export class EventEntity extends BaseEntity {
   user: UserEntity;
 
   @Column({ nullable: false, length: 200, type: 'varchar' })
+  @AutoMap()
   name!: string;
 
   @Column({ nullable: true, type: 'text' })
+  @AutoMap()
   logoUrl?: string;
 
   @Column({ nullable: true, type: 'text' })
@@ -46,9 +49,11 @@ export class EventEntity extends BaseEntity {
   description?: string;
 
   @Column({ nullable: true, type: 'varchar' })
+  @AutoMap()
   eventPlaceName?: string;
 
   @Column({ nullable: true, type: 'varchar' })
+  @AutoMap()
   eventAddress?: string;
 
   @Column({ nullable: true, type: 'date' })
@@ -58,6 +63,7 @@ export class EventEntity extends BaseEntity {
   saleEndDate?: string;
 
   @Column({ nullable: true, type: 'date' })
+  @AutoMap()
   eventStartDate?: string;
 
   @Column({ nullable: true, type: 'date' })
@@ -73,6 +79,7 @@ export class EventEntity extends BaseEntity {
   ticketImageUrl?: string;
 
   @Column({ nullable: true, type: 'decimal' })
+  @AutoMap()
   ticketPrice?: number;
 
   @Column({ nullable: true, type: 'integer' })

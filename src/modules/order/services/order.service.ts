@@ -6,7 +6,11 @@ import { OrderRepository } from '../infrastructure/order.repository';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { OrderEntity } from '../domain/entities/order.entity';
-import { PagingOptionDto } from '../dto/paging-option.dto';
+import { PagingOptionDto } from './../dto/paging-option.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { EventDto, OrderPayloadDto } from '../dto/order-payload.dto';
+import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
 
 @Injectable()
 export class OrderService {
@@ -15,6 +19,7 @@ export class OrderService {
     private orderRepository: OrderRepository,
     @InjectQueue('order-queue') private orderQueue: Queue,
     private eventService: EventService,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async create(orderDto: OrderDto): Promise<boolean> {
@@ -39,7 +44,7 @@ export class OrderService {
     }
   }
 
-  async findAll(): Promise<OrderEntity[]> {
+  async getAll(): Promise<OrderEntity[]> {
     try {
       const entities = await this.orderRepository.find();
 
@@ -49,26 +54,33 @@ export class OrderService {
     }
   }
 
-  async findOneById(id: string): Promise<OrderEntity> {
+  async getOneById(id: string): Promise<OrderEntity> {
     const entity = await this.orderRepository.findOne({ id });
     return entity;
   }
 
-  async paging(options: PagingOptionDto): Promise<OrderEntity[]> {
+  async getPaging(options: PagingOptionDto): Promise<any> {
     try {
-      const { orderId, page = 1, limit = 5 } = options;
+      const { userId, page = 1, limit = 5 } = options;
 
       const entities = await this.orderRepository.find({
         where: {
-          id: orderId,
+          userId,
         },
+        relations: ['event'],
         take: limit,
         skip: (page - 1) * limit,
         order: {
           createdAt: 'ASC',
         },
       });
-      return entities;
+      this.mapper.createMap(OrderEntity, OrderPayloadDto);
+      this.mapper.createMap(EventEntity, EventDto);
+      const orders = entities.map((entity) => {
+        return this.mapper.map(entity, OrderPayloadDto, OrderEntity);
+      });
+
+      return orders;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

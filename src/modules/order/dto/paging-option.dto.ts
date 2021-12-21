@@ -4,7 +4,7 @@ import { IsNotEmpty } from 'class-validator';
 export class PagingOptionDto {
   @ApiProperty()
   @IsNotEmpty()
-  orderId: string;
+  userId: string;
 
   @ApiProperty()
   page?: number;

@@ -12,20 +12,24 @@ import {
 } from 'typeorm';
 import { StatusEnum } from '../enums/status.enum';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'Order' })
 export class OrderEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
+  @AutoMap()
   id!: string;
 
   @Column({ type: 'uuid' })
   eventId: string;
 
   @ManyToOne(() => EventEntity, (event) => event.id)
-  @JoinColumn({ name: 'uuid' })
+  @JoinColumn({ name: 'eventId' })
+  @AutoMap({ typeFn: () => EventEntity })
   event: EventEntity;
 
   @Column({ type: 'uuid' })
+  @AutoMap()
   userId: string;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
@@ -40,9 +44,11 @@ export class OrderEntity extends BaseEntity {
   bank: BankEntity;
 
   @Column({ nullable: false, type: 'float' })
+  @AutoMap()
   amount!: number;
 
   @Column({ nullable: true, type: 'simple-array' })
+  @AutoMap()
   tickets?: string[];
 
   @Column({
