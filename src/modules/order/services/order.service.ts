@@ -9,8 +9,7 @@ import { OrderEntity } from '../domain/entities/order.entity';
 import { PagingOptionDto } from './../dto/paging-option.dto';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { EventDto, OrderPayloadDto } from '../dto/order-payload.dto';
-import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
+import { OrderPayloadDto } from '../dto/order-payload.dto';
 
 @Injectable()
 export class OrderService {
@@ -74,8 +73,6 @@ export class OrderService {
           createdAt: 'ASC',
         },
       });
-      this.mapper.createMap(OrderEntity, OrderPayloadDto);
-      this.mapper.createMap(EventEntity, EventDto);
       const orders = entities.map((entity) => {
         return this.mapper.map(entity, OrderPayloadDto, OrderEntity);
       });

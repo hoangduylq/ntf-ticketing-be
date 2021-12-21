@@ -7,6 +7,7 @@ import { OrderRepository } from './infrastructure/order.repository';
 import { BullModule } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrderConsumer } from './infrastructure/order.consumer';
+import { OrderMapper } from './mappers/order.mapper';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { OrderConsumer } from './infrastructure/order.consumer';
     EventModule,
   ],
   controllers: [OrderController],
-  providers: [OrderService, OrderConsumer],
+  providers: [OrderService, OrderConsumer, OrderMapper],
   exports: [OrderService],
 })
 export class OrderModule {}
