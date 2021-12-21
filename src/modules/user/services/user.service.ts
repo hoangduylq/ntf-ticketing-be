@@ -1,4 +1,3 @@
-import { Role } from 'src/modules/auth/decorator/role.decorator';
 import { UserEntity } from './../domain/entities/user.entity';
 import { UserRepository } from './../infrastructure/user.repository';
 import { RoleService } from '../../role-permission/services/role.service';
@@ -7,17 +6,12 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
-  Inject,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserCredentialsDto } from '../dto/user-credential.dto';
 import { UserDto } from '../dto/user.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
-import { REQUEST } from '@nestjs/core';
-import { IPayload } from './../../auth/domain/interfaces/login.interface';
-import { IJwtPayload } from './../../auth/domain/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class UserService {
@@ -25,36 +19,50 @@ export class UserService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private roleService: RoleService,
-    @Inject(REQUEST) private readonly req: any,
   ) {}
 
-  async findUserByEmail(email: string): Promise<UserEntity> {
+  async getUserByEmail(email: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ email });
     return user;
   }
 
-  async findUserByJWt(id: string): Promise<IPayload> {
-    const user = await this.userRepository.findOne(id);
-    // if (!user) throw new NotFoundException('Not found');
-    // console.log(user);
-    // return user;
-    if (user) {
-      const role = await this.roleService.getRoleById(user.roleId);
-      const payload = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
+  async getUserByJWt(id: string): Promise<UserDto> {
+    const result = await this.userRepository.findOne(id);
+    if (result) {
+      const role = await this.roleService.getRoleById(result.roleId);
+      const user = {
+        id: result.id,
+        email: result.email,
+        name: result.name,
         role: role.name,
+        gender: result.gender,
+        birthday: result.birthday,
+        numberPhone: result.numberPhone,
+        avatar: result.avatar,
       };
-      return payload;
+      return user;
     } else {
       throw new NotFoundException('Not found');
     }
   }
 
+  async getUserById(id: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne(id);
+    if (!user) throw new NotFoundException('Not found');
+    return user;
+  }
+
+  async getAllUser(): Promise<UserEntity[]> {
+    try {
+      return this.userRepository.find();
+    } catch (error) {
+      throw new BadRequestException(error?.message);
+    }
+  }
+
   async signup(userCredential: UserCredentialsDto): Promise<any> {
     const { id: uidFacebook, email, name, gender, password } = userCredential;
-    const isInvalidUser = await this.findUserByEmail(email);
+    const isInvalidUser = await this.getUserByEmail(email);
     if (isInvalidUser && isInvalidUser.isSocial) return isInvalidUser;
 
     if (isInvalidUser && !isInvalidUser.isSocial)
@@ -88,47 +96,20 @@ export class UserService {
     return dto;
   }
 
-  async getUserById(id: string): Promise<UserEntity> {
-    const userReq: IJwtPayload = this.req.user;
-    if (userReq) {
-      if (
-        userReq.role === Role.Admin ||
-        (userReq.role === Role.User && userReq.id === id)
-      ) {
-        const user = await this.userRepository.findOne(id);
-        if (!user) throw new NotFoundException('Not found');
-        return user;
-      }
-    }
-
-    throw new UnauthorizedException('Permission denied');
-  }
-
-  async getAllUser(): Promise<UserEntity[]> {
-    try {
-      return this.userRepository.find();
-    } catch (error) {
-      throw new BadRequestException(error?.message);
-    }
-  }
-
-  async update(id: string, userUpdateDto: UserUpdateDto): Promise<boolean> {
-    const userReq = this.req.user;
-    if (userReq && userReq.id === id) {
-      const user = await this.userRepository.findOne(id);
-      if (user) {
-        const userUpdated = await this.userRepository.update(
-          {
-            id: id,
-          },
-          {
-            ...userUpdateDto,
-          },
-        );
-        return !!userUpdated.affected;
-      } else {
-        return false;
-      }
+  async update(userUpdateDto: UserUpdateDto, userId: string): Promise<boolean> {
+    const user = await this.userRepository.findOne(userId);
+    if (user) {
+      const userUpdated = await this.userRepository.update(
+        {
+          id: userId,
+        },
+        {
+          ...userUpdateDto,
+        },
+      );
+      return !!userUpdated.affected;
+    } else {
+      return false;
     }
   }
 }

@@ -5,20 +5,17 @@ import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
 import { Like, Repository } from 'typeorm';
 import {
   BadRequestException,
-  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
-    @Inject(REQUEST) private readonly req: any,
   ) {}
 
   async create(createEventDto: EventDto): Promise<EventEntity> {
@@ -88,11 +85,14 @@ export class EventService {
     }
   }
 
-  async updateEventDetail(id: string, eventDetail: any): Promise<EventEntity> {
+  async updateEventDetail(
+    id: string,
+    eventDetail: EventDto,
+    userId: string,
+  ): Promise<EventEntity> {
     try {
-      const user = this.req.user;
       const event = await this.getEventById(id);
-      if (event.userId === user.id) {
+      if (event.userId === userId) {
         const eventUpdated = await this.eventRepository.save({
           ...event,
           ...eventDetail,

@@ -8,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -24,12 +23,12 @@ import { User } from './../../../decorator/user.decorator';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('infor')
+  @Get('/profile')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  async getUserWithJwt(@User('id') id: string) {
+  async getProfile(@User('id') id: string) {
     try {
-      return this.userService.findUserByJWt(id);
+      return this.userService.getUserByJWt(id);
     } catch (error) {
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
@@ -44,19 +43,17 @@ export class UserController {
     return res;
   }
 
-  @Get('/:id')
-  @Roles(Role.User)
+  @Get('')
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
-  async getProfileByUser(@User('id') id: string) {
-    const res = await this.userService.getUserById(id);
-    return res;
+  async getAllProfile() {
+    return await this.userService.getAllUser();
   }
 
   @Post('signup')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async signup(@Request() req, @Body() model: UserCredentialsDto) {
-    return this.userService.signup(req.body);
+  async signup(@Body() userCredential: UserCredentialsDto) {
+    return this.userService.signup(userCredential);
   }
 
   @Patch('/:id')
@@ -64,21 +61,13 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   async updateUser(
-    @Param('id') id: string,
     @Body() userUpdateDto: UserUpdateDto,
+    @User('id') userId: string,
   ) {
     try {
-      return this.userService.update(id, userUpdateDto);
+      return this.userService.update(userUpdateDto, userId);
     } catch (error) {
       throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
     }
-  }
-
-  @Get('')
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiBearerAuth()
-  async getAllProfile() {
-    return await this.userService.getAllUser();
   }
 }

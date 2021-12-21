@@ -41,7 +41,7 @@ export class UploadImgService {
     }
   }
 
-  async deleteImageInCloundinary(publicId: string) {
+  async deleteImageInCloundinary(publicId: string): Promise<boolean> {
     try {
       const result = await cloudinary.api.delete_resources([publicId]);
       const isDeleted = result.deleted[publicId] === 'deleted';

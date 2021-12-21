@@ -1,4 +1,3 @@
-import { IPaginateOptions } from '../domain/interfaces/paginate_options.interface';
 import { EventService } from '../../event/services/event.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +5,8 @@ import { OrderDto } from '../dto/order.dto';
 import { OrderRepository } from '../infrastructure/order.repository';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { OrderEntity } from '../domain/entities/order.entity';
+import { PagingOptionDto } from '../dto/paging-option.dto';
 
 @Injectable()
 export class OrderService {
@@ -38,7 +39,7 @@ export class OrderService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<OrderEntity[]> {
     try {
       const entities = await this.orderRepository.find();
 
@@ -48,12 +49,12 @@ export class OrderService {
     }
   }
 
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<OrderEntity> {
     const entity = await this.orderRepository.findOne({ id });
     return entity;
   }
 
-  async paging(options: IPaginateOptions) {
+  async paging(options: PagingOptionDto): Promise<OrderEntity[]> {
     try {
       const { orderId, page = 1, limit = 5 } = options;
 

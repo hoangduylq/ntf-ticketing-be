@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty } from 'class-validator';
-// import { RoleEntity } from './../../role-permission/domain/entities/role.entity';
+import { GenderEnum } from '../domain/enums/gender.enum';
 export class UserDto {
+  @ApiProperty()
+  id?: string;
+
   @ApiProperty()
   @IsNotEmpty()
   name: string;
@@ -16,6 +19,17 @@ export class UserDto {
   role: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  isSocial: boolean;
+  isSocial?: boolean;
+
+  @ApiProperty()
+  gender?: GenderEnum;
+
+  @ApiProperty()
+  birthday?: string;
+
+  @ApiProperty()
+  numberPhone?: string;
+
+  @ApiProperty()
+  avatar?: string;
 }

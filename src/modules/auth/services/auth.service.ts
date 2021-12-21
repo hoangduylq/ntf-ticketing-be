@@ -11,8 +11,8 @@ import * as bcrypt from 'bcrypt';
 import { UserLoginDto } from './../../user/dto/user-login.dto';
 import { FacebookAuthService } from 'facebook-auth-nestjs';
 import { RoleService } from 'src/modules/role-permission/services/role.service';
-import { ILogin } from '../domain/interfaces/login.interface';
 import { IJwtPayload } from '../domain/interfaces/jwt-payload.interface';
+import { LoginDto } from '../dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,9 +23,9 @@ export class AuthService {
     private readonly roleService: RoleService,
   ) {}
 
-  async login(userLogin: UserLoginDto): Promise<ILogin> {
+  async login(userLogin: UserLoginDto): Promise<LoginDto> {
     const { email, password } = userLogin;
-    const user = await this.userService.findUserByEmail(email);
+    const user = await this.userService.getUserByEmail(email);
     if (user && !user.isSocial) {
       if (user && (await bcrypt.compare(password, user.password))) {
         const role = await this.roleService.getRoleById(user.roleId);
@@ -34,6 +34,7 @@ export class AuthService {
           email: user.email,
           name: user.name,
           role: role.name,
+          avatar: user.avatar,
         };
         const accessToken = await this.generateToken(user);
         return { accessToken, payload };
@@ -45,7 +46,7 @@ export class AuthService {
     }
   }
 
-  async loginWithFacebook(accessToken: string): Promise<ILogin> {
+  async loginWithFacebook(accessToken: string): Promise<LoginDto> {
     try {
       const user = await this.facebookService.getUser(
         accessToken,

@@ -7,18 +7,16 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
   Query,
-  Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { EventService } from '../services/event.service';
 import { Role, Roles } from 'src/modules/auth/decorator/role.decorator';
+import { User } from 'src/decorator/user.decorator';
 
 @Controller('events')
 @ApiTags('events')
@@ -33,14 +31,19 @@ export class EventController {
   }
 
   @Put('/:eventId')
-  @Roles(Role.User)
+  @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   async updateEvent(
     @Param('eventId') eventId: string,
     @Body() eventInfo: EventDto,
+    @User('id') userId: string,
   ): Promise<any> {
-    return await this.eventService.updateEventDetail(eventId, eventInfo);
+    return await this.eventService.updateEventDetail(
+      eventId,
+      eventInfo,
+      userId,
+    );
   }
 
   @Get('/paging')
