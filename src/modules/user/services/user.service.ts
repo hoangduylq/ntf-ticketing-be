@@ -16,7 +16,8 @@ import { UserCredentialsDto } from '../dto/user-credential.dto';
 import { UserDto } from '../dto/user.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
 import { REQUEST } from '@nestjs/core';
-import { IJwtPayload } from 'src/modules/auth/strategies/jwt.strategy';
+import { IPayload } from './../../auth/domain/interfaces/login.interface';
+import { IJwtPayload } from './../../auth/domain/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class UserService {
@@ -32,11 +33,23 @@ export class UserService {
     return user;
   }
 
-  async findUserByJWt(): Promise<UserEntity> {
-    const userReq: IJwtPayload = this.req.user;
-    const user = await this.userRepository.findOne(userReq.id);
-    if (!user) throw new NotFoundException('Not found');
-    return user;
+  async findUserByJWt(id: string): Promise<IPayload> {
+    const user = await this.userRepository.findOne(id);
+    // if (!user) throw new NotFoundException('Not found');
+    // console.log(user);
+    // return user;
+    if (user) {
+      const role = await this.roleService.getRoleById(user.roleId);
+      const payload = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: role.name,
+      };
+      return payload;
+    } else {
+      throw new NotFoundException('Not found');
+    }
   }
 
   async signup(userCredential: UserCredentialsDto): Promise<any> {

@@ -17,17 +17,38 @@ import { UserCredentialsDto } from '../dto/user-credential.dto';
 import { UserService } from '../services/user.service';
 import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
 import { UserUpdateDto } from '../dto/user-update.dto';
+import { User } from './../../../decorator/user.decorator';
 
 @Controller('users')
 @ApiTags('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('infor')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  async getUserWithJwt(@User('id') id: string) {
+    try {
+      return this.userService.findUserByJWt(id);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Get('/:id')
-  @Roles(Role.User, Role.Admin)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
-  async getProfile(@Param('id') id: string) {
+  async getProfileByAdmin(@Param('id') id: string) {
+    const res = await this.userService.getUserById(id);
+    return res;
+  }
+
+  @Get('/:id')
+  @Roles(Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  async getProfileByUser(@User('id') id: string) {
     const res = await this.userService.getUserById(id);
     return res;
   }

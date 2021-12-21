@@ -1,5 +1,3 @@
-import { IJwtPayload } from './../strategies/jwt.strategy';
-import { ILogin } from './../../event/domain/interfaces/login.interface';
 import { UserEntity } from './../../user/domain/entities/user.entity';
 import {
   BadRequestException,
@@ -13,6 +11,8 @@ import * as bcrypt from 'bcrypt';
 import { UserLoginDto } from './../../user/dto/user-login.dto';
 import { FacebookAuthService } from 'facebook-auth-nestjs';
 import { RoleService } from 'src/modules/role-permission/services/role.service';
+import { ILogin } from '../domain/interfaces/login.interface';
+import { IJwtPayload } from '../domain/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -65,28 +65,6 @@ export class AuthService {
           role: role.name,
         };
         const accessToken = await this.generateToken(internalUser);
-        return { accessToken, payload };
-      }
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new UnauthorizedException('Invalid access token');
-    }
-  }
-
-  async loginWithJwt(): Promise<ILogin> {
-    try {
-      const user = await this.userService.findUserByJWt();
-      if (user) {
-        const role = await this.roleService.getRoleById(user.roleId);
-        const payload = {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: role.name,
-        };
-        const accessToken = await this.generateToken(user);
         return { accessToken, payload };
       }
     } catch (error) {
