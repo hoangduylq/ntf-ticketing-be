@@ -12,6 +12,8 @@ import * as bcrypt from 'bcrypt';
 import { UserCredentialsDto } from '../dto/user-credential.dto';
 import { UserDto } from '../dto/user.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class UserService {
@@ -19,6 +21,7 @@ export class UserService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private roleService: RoleService,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async getUserByEmail(email: string): Promise<UserEntity> {
@@ -52,9 +55,13 @@ export class UserService {
     return user;
   }
 
-  async getAllUser(): Promise<UserEntity[]> {
+  async getAllUser(): Promise<UserDto[]> {
     try {
-      return this.userRepository.find();
+      const entities = await this.userRepository.find();
+      const users = entities.map((entity) => {
+        return this.mapper.map(entity, UserDto, UserEntity);
+      });
+      return users;
     } catch (error) {
       throw new BadRequestException(error?.message);
     }

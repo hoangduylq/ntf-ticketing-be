@@ -14,16 +14,20 @@ import { GenderEnum } from '../enums/gender.enum';
 import { RoleEntity } from './../../../role-permission/domain/entities/role.entity';
 import { OrderEntity } from './../../../order/domain/entities/order.entity';
 import { Exclude } from 'class-transformer';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'User' })
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
+  @AutoMap()
   id!: string;
 
   @Column({ nullable: false, length: 100, type: 'varchar' })
+  @AutoMap()
   name!: string;
 
   @Column({ nullable: false, length: 100, type: 'varchar' })
+  @AutoMap()
   email!: string;
 
   @Column({ nullable: false, length: 100, type: 'varchar' })
@@ -33,9 +37,11 @@ export class UserEntity extends BaseEntity {
   password?: string;
 
   @Column({ nullable: true, type: 'date' })
+  @AutoMap()
   birthday?: string;
 
   @Column({ nullable: true, length: 11, type: 'varchar' })
+  @AutoMap()
   numberPhone?: string;
 
   @Column({
@@ -43,9 +49,11 @@ export class UserEntity extends BaseEntity {
     type: 'enum',
     enum: GenderEnum,
   })
+  @AutoMap()
   gender?: GenderEnum;
 
   @Column({ nullable: true, type: 'text' })
+  @AutoMap()
   avatar?: string;
 
   @Column({ type: 'uuid' })
@@ -54,12 +62,15 @@ export class UserEntity extends BaseEntity {
   @Exclude()
   @ManyToOne(() => RoleEntity, (role) => role.id, { eager: true })
   @JoinColumn({ name: 'roleId' })
+  @AutoMap({ typeFn: () => RoleEntity })
   role!: RoleEntity;
 
   @Column({ nullable: false, type: 'boolean', default: false })
+  @AutoMap()
   isSocial!: boolean;
 
   @Column({ nullable: true, type: 'boolean', default: false })
+  @AutoMap()
   isDeleted?: boolean;
 
   @CreateDateColumn()

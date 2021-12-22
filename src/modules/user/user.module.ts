@@ -5,6 +5,7 @@ import { UserService } from './services/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { BankRepository } from '../payment/infrastructure/bank.repository';
+import { UserMapper } from './mappers/user.mapper';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { BankRepository } from '../payment/infrastructure/bank.repository';
   ],
   exports: [UserService],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, UserMapper],
 })
 export class UserModule {}

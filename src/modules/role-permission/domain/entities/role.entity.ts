@@ -7,13 +7,16 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { AutoMap } from '@automapper/classes';
 
 @Entity({ name: 'Role' })
 export class RoleEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
+  @AutoMap()
   id!: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
+  @AutoMap()
   name!: string;
 
   @OneToMany(() => UserEntity, (user) => user.role)
