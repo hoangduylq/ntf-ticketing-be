@@ -58,10 +58,13 @@ export class OrderService {
     return entity;
   }
 
-  async getPaging(options: PagingOptionDto, userId: string): Promise<any> {
+  async getPaging(
+    options: PagingOptionDto,
+    userId: string,
+  ): Promise<{ orders: OrderPayloadDto[]; total: number }> {
     try {
       const { page = 1, limit = 5 } = options;
-      const entities = await this.orderRepository.find({
+      const [entities, total] = await this.orderRepository.findAndCount({
         where: {
           userId,
         },
@@ -76,7 +79,10 @@ export class OrderService {
         return this.mapper.map(entity, OrderPayloadDto, OrderEntity);
       });
 
-      return orders;
+      return {
+        orders,
+        total,
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
