@@ -49,10 +49,10 @@ export class UserService {
     }
   }
 
-  async getUserById(id: string): Promise<UserEntity> {
+  async getUserById(id: string): Promise<UserDto> {
     const user = await this.userRepository.findOne(id);
     if (!user) throw new NotFoundException('Not found');
-    return user;
+    return this.mapper.map(user, UserDto, UserEntity);
   }
 
   async getAllUser(): Promise<UserDto[]> {
