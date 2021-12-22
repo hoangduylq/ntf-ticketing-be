@@ -25,7 +25,7 @@ export class OrderService {
     try {
       const { eventId, amount } = orderDto;
       const event = await this.eventService.getEventById(eventId);
-      if (amount <= event.availableTickets && event.status === 'Ready') {
+      if (amount <= event.availableTickets) {
         const newOrder = await this.orderRepository.create(orderDto);
         const { id } = await this.orderRepository.save(newOrder);
 
@@ -36,8 +36,8 @@ export class OrderService {
             eventId,
           });
         }
-      }
-      return true;
+        if (newOrder) return true;
+      } else return false;
     } catch (error) {
       return false;
     }
@@ -69,7 +69,7 @@ export class OrderService {
         take: limit,
         skip: (page - 1) * limit,
         order: {
-          createdAt: 'ASC',
+          createdAt: 'DESC',
         },
       });
       const orders = entities.map((entity) => {
