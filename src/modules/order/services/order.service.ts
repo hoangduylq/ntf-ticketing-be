@@ -25,7 +25,7 @@ export class OrderService {
     try {
       const { eventId, amount } = orderDto;
       const event = await this.eventService.getEventById(eventId);
-      if (amount <= event.availableTickets && event.status === 'Ready') {
+      if (amount <= event.availableTickets) {
         const newOrder = await this.orderRepository.create(orderDto);
         const { id } = await this.orderRepository.save(newOrder);
 
@@ -36,8 +36,8 @@ export class OrderService {
             eventId,
           });
         }
-      }
-      return true;
+        if (newOrder) return true;
+      } else return false;
     } catch (error) {
       return false;
     }
@@ -58,10 +58,13 @@ export class OrderService {
     return entity;
   }
 
-  async getPaging(options: PagingOptionDto, userId: string): Promise<any> {
+  async getPaging(
+    options: PagingOptionDto,
+    userId: string,
+  ): Promise<{ orders: OrderPayloadDto[]; total: number }> {
     try {
       const { page = 1, limit = 5 } = options;
-      const entities = await this.orderRepository.find({
+      const [entities, total] = await this.orderRepository.findAndCount({
         where: {
           userId,
         },
@@ -69,14 +72,17 @@ export class OrderService {
         take: limit,
         skip: (page - 1) * limit,
         order: {
-          createdAt: 'ASC',
+          createdAt: 'DESC',
         },
       });
       const orders = entities.map((entity) => {
         return this.mapper.map(entity, OrderPayloadDto, OrderEntity);
       });
 
-      return orders;
+      return {
+        orders,
+        total,
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
