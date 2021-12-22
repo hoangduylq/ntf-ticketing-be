@@ -2,7 +2,7 @@ import { Pagination } from './../dto/event.dto';
 import { StatusEventEnum } from './../domain/enums/status.enum';
 import { EventDto, PaginationEvent } from '../dto/event.dto';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import {
   BadRequestException,
   Injectable,
@@ -55,7 +55,7 @@ export class EventService {
         skip: skipAmount,
         take: pageSize,
         order: {
-          categoryId: 'ASC',
+          name: 'ASC',
         },
       });
     } catch (error) {
@@ -64,7 +64,7 @@ export class EventService {
   }
 
   async getEventById(id: string): Promise<EventEntity> {
-    const event = this.eventRepository.findOneOrFail({ id });
+    const event = await this.eventRepository.findOne({ id });
     if (!event) {
       throw new NotFoundException('Event not found');
     }
