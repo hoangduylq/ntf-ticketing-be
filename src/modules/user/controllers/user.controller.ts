@@ -57,6 +57,21 @@ export class UserController {
   }
 
   @Patch('/:id')
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  async updateUserByAdmin(
+    @Param('id') id: string,
+    @Body() userUpdateDto: UserUpdateDto,
+  ) {
+    try {
+      return this.userService.update(userUpdateDto, id);
+    } catch (error) {
+      throw new HttpException(error?.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Patch('')
   @Roles(Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
