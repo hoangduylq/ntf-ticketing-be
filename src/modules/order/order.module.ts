@@ -1,3 +1,4 @@
+import { ShareModule } from './../share/share.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderService } from './services/order.service';
@@ -8,6 +9,7 @@ import { BullModule } from '@nestjs/bull';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrderConsumer } from './infrastructure/order.consumer';
 import { OrderMapper } from './mappers/order.mapper';
+import { PaymentModule } from '../payment/payment.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { OrderMapper } from './mappers/order.mapper';
       name: 'order-queue',
     }),
     EventModule,
+    ShareModule,
+    PaymentModule,
   ],
   controllers: [OrderController],
   providers: [OrderService, OrderConsumer, OrderMapper],

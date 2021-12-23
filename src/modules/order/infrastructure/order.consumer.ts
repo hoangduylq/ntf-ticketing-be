@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from 'bull';
 import { OrderRepository } from './order.repository';
 import { EventService } from './../../event/services/event.service';
+import { TatumService } from './../../share/services/tatum.service';
 
 @Processor('order-queue')
 export class OrderConsumer {
@@ -17,33 +18,63 @@ export class OrderConsumer {
     @InjectRepository(OrderRepository)
     private orderRepository: OrderRepository,
     private readonly eventService: EventService,
+    private readonly tatumService: TatumService,
   ) {}
   @Process('order-job')
-  async orderJob(job: Job<{ id: string; amount: number; eventId: string }>) {
+  async orderJob(
+    job: Job<{
+      id: string;
+      amount: number;
+      eventId: string;
+      walletAddress: string;
+      mnemonic: string;
+    }>,
+  ) {
     try {
-      const { id, amount, eventId } = job.data;
-      const generateToken = id + Math.random() * 100 + Math.random() * 100;
-      if (generateToken) {
-        const order = await this.orderRepository.findOne({ id });
-        const ticketArr: string[] = order.tickets || [];
-        ticketArr.push(generateToken);
+      const { id, amount, eventId, walletAddress, mnemonic } = job.data;
+      // const currentBlock = await this.tatumService.getCurrentBlock();
+      const address = await this.tatumService.generateAddress(walletAddress, 2);
 
-        await this.orderRepository.update(
-          {
-            id: id,
-          },
-          {
-            tickets: ticketArr,
-            status:
-              ticketArr.length === amount
-                ? StatusEnum.Done
-                : StatusEnum.Progress,
-          },
-        );
+      // get privateKey
+      // const privateKey = await this.tatumService.generatePrivateKey(
+      //   mnemonic,
+      //   2,
+      // );
+      // console.log(privateKey);
 
-        ticketArr.length === amount &&
-          (await this.eventService.updateAvaiableTickets(eventId, amount));
-      }
+      //get InfoAccount by address
+      // const info = await this.tatumService.getInfoAccount(address);
+      // console.log(info);
+      // {
+      //   address: '0xb5b194d11c9824d6',
+      //   balance: 100000,
+      //   code: '',
+      //   contracts: {},
+      //   keys: [ [Object] ]
+      // }
+
+      // const generateToken = id + Math.random() * 100 + Math.random() * 100;
+      // if (generateToken) {
+      //   const order = await this.orderRepository.findOne({ id });
+      //   const ticketArr: string[] = order.tickets || [];
+      //   ticketArr.push(generateToken);
+
+      //   await this.orderRepository.update(
+      //     {
+      //       id: id,
+      //     },
+      //     {
+      //       tickets: ticketArr,
+      //       status:
+      //         ticketArr.length === amount
+      //           ? StatusEnum.Done
+      //           : StatusEnum.Progress,
+      //     },
+      //   );
+
+      //   ticketArr.length === amount &&
+      //     (await this.eventService.updateAvaiableTickets(eventId, amount));
+      // }
     } catch (error) {
       console.log(error);
     }

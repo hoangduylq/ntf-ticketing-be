@@ -6,6 +6,8 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -14,6 +16,8 @@ import { UserDto } from '../dto/user.dto';
 import { UserUpdateDto } from '../dto/user-update.dto';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
+import { TatumService } from './../../share/services/tatum.service';
+import { WalletService } from './../../payment/services/wallet.service';
 
 @Injectable()
 export class UserService {
@@ -21,6 +25,9 @@ export class UserService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     private roleService: RoleService,
+    private tatumService: TatumService,
+    @Inject(forwardRef(() => WalletService))
+    private walletService: WalletService,
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
@@ -31,6 +38,8 @@ export class UserService {
 
   async getUserByJWt(id: string): Promise<UserDto> {
     const result = await this.userRepository.findOne(id);
+    // const current = await this.tatumService.getCurrentBlock();
+    // console.log(current);
     if (result) {
       const role = await this.roleService.getRoleById(result.roleId);
       const user = {
@@ -94,13 +103,23 @@ export class UserService {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const result = await this.userRepository.save(newUser);
-    const dto: UserDto = {
-      email: result.email,
-      name: result.name,
-      role: role.name,
-      isSocial: result.isSocial,
-    };
-    return dto;
+
+    if (result) {
+      const wallet = await this.tatumService.generateFlowWallet();
+      await this.walletService.create({
+        userId: result.id,
+        walletAddress: wallet.xpub,
+        mnemonic: wallet.mnemonic,
+      });
+
+      const dto: UserDto = {
+        email: result.email,
+        name: result.name,
+        role: role.name,
+        isSocial: result.isSocial,
+      };
+      return dto;
+    }
   }
 
   async update(userUpdateDto: UserUpdateDto, userId: string): Promise<boolean> {

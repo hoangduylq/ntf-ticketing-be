@@ -22,4 +22,7 @@ export class WalletEntity extends BaseEntity {
 
   @Column({ nullable: false, type: 'varchar' })
   walletAddress!: string;
+
+  @Column({ nullable: false, type: 'varchar' })
+  mnemonic!: string;
 }

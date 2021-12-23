@@ -1,6 +1,5 @@
-import { AuthService } from './../auth/services/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { BankRepository } from '../payment/infrastructure/bank.repository';
 import { BankService } from './services/bank.service';
 import { PaymentController } from './controllers/payment.controller';
@@ -11,7 +10,7 @@ import { WalletRepository } from './infrastructure/wallet.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([BankRepository, WalletRepository]),
-    UserModule,
+    forwardRef(() => UserModule),
   ],
   exports: [BankService, WalletService],
   controllers: [PaymentController],

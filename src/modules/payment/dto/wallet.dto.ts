@@ -7,4 +7,8 @@ export class WalletDto {
   @ApiProperty()
   @IsNotEmpty()
   walletAddress!: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  mnemonic!: string;
 }

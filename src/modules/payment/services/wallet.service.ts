@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WalletEntity } from '../domain/entities/wallet.entity';
 import { WalletUpdateDto } from '../dto/wallet-update.dto';
@@ -11,7 +11,8 @@ export class WalletService {
   constructor(
     @InjectRepository(WalletRepository)
     private walletRespository: WalletRepository,
-    private readonly userService: UserService,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
   ) {}
 
   async create(walletDto: WalletDto): Promise<boolean> {

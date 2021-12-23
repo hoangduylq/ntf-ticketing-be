@@ -10,6 +10,7 @@ import { PagingOptionDto } from './../dto/paging-option.dto';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { OrderPayloadDto } from '../dto/order-payload.dto';
+import { WalletService } from './../../payment/services/wallet.service';
 
 @Injectable()
 export class OrderService {
@@ -18,22 +19,28 @@ export class OrderService {
     private orderRepository: OrderRepository,
     @InjectQueue('order-queue') private orderQueue: Queue,
     private eventService: EventService,
+    private walletService: WalletService,
     @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async create(orderDto: OrderDto): Promise<boolean> {
     try {
-      const { eventId, amount } = orderDto;
+      const { eventId, amount, userId } = orderDto;
       const event = await this.eventService.getEventById(eventId);
       if (amount <= event.availableTickets) {
         const newOrder = await this.orderRepository.create(orderDto);
         const { id } = await this.orderRepository.save(newOrder);
+        const { walletAddress, mnemonic } = await this.walletService.find(
+          userId,
+        );
 
         for (let count = 1; count <= amount; count++) {
           await this.orderQueue.add('order-job', {
             id: id,
             amount,
             eventId,
+            walletAddress,
+            mnemonic,
           });
         }
         if (newOrder) return true;

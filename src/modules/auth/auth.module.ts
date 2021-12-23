@@ -1,6 +1,4 @@
 import { PaymentModule } from './../payment/payment.module';
-import { WalletService } from './../payment/services/wallet.service';
-import { BankService } from './../payment/services/bank.service';
 import { FacebookAuthModule } from 'facebook-auth-nestjs';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -14,6 +12,7 @@ import { AuthService } from './services/auth.service';
 import { RolePermissionModule } from './../role-permission/role-permission.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserRepository } from '../user/infrastructure/user.repository';
+import { ShareModule } from '../share/share.module';
 
 @Module({
   controllers: [AuthController],
@@ -40,6 +39,7 @@ import { UserRepository } from '../user/infrastructure/user.repository';
     PaymentModule,
     PassportModule,
     RolePermissionModule,
+    ShareModule,
   ],
   providers: [AuthService, UserService, JwtStrategy],
   exports: [AuthService],

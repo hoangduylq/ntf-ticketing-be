@@ -16,6 +16,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './exceptions/exception-filter';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
+import { ShareModule } from './modules/share/share.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AutomapperModule } from '@automapper/nestjs';
     EventModule,
     UploadImgModule,
     PaymentModule,
+    ShareModule,
   ],
   controllers: [AppController],
   providers: [
