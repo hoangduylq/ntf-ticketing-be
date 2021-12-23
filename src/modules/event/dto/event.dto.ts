@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, Min } from 'class-validator';
 export class EventDto {
@@ -112,6 +113,29 @@ export class EventFilterDto {
 
   @ApiProperty()
   categoryId?: string;
+}
+
+export class EventPayloadDto {
+  @AutoMap()
+  id: string;
+
+  @AutoMap()
+  name: string;
+
+  @AutoMap()
+  logoUrl: string;
+
+  @AutoMap()
+  bannerUrl: string;
+
+  @AutoMap()
+  eventStartDate: string;
+
+  @AutoMap()
+  eventPlaceName: string;
+
+  @AutoMap()
+  eventAddress: string;
 }
 
 export class PaginationEvent extends PartialType(

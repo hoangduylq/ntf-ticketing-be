@@ -1,4 +1,4 @@
-import { Pagination } from './../dto/event.dto';
+import { EventPayloadDto, Pagination } from './../dto/event.dto';
 import { StatusEventEnum } from './../domain/enums/status.enum';
 import { EventDto, PaginationEvent } from '../dto/event.dto';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
@@ -10,12 +10,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async create(createEventDto: EventDto): Promise<EventEntity> {
@@ -39,18 +42,12 @@ export class EventService {
   async getEventPaging(
     query: PaginationEvent,
     pagination: Pagination,
-  ): Promise<EventEntity[]> {
+  ): Promise<{ events: EventPayloadDto[]; total: number }> {
     try {
       const { page = 1, pageSize = 5 } = pagination;
       const skipAmount = (page - 1) * pageSize;
 
-      // for (const field in query) {
-      //   if (typeof query[field] === 'string') {
-      //     query[field] = Like(`%${query[field]}%`);
-      //   }
-      // }
-
-      return await this.eventRepository.find({
+      const [entities, total] = await this.eventRepository.findAndCount({
         where: query,
         skip: skipAmount,
         take: pageSize,
@@ -58,6 +55,14 @@ export class EventService {
           name: 'ASC',
         },
       });
+
+      const events = entities.map((entity) => {
+        return this.mapper.map(entity, EventPayloadDto, EventEntity);
+      });
+      return {
+        events,
+        total,
+      };
     } catch (error) {
       throw new BadRequestException(error?.message);
     }

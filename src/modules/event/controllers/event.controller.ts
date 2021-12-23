@@ -1,4 +1,8 @@
-import { PaginationEvent, Pagination } from './../dto/event.dto';
+import {
+  PaginationEvent,
+  Pagination,
+  EventPayloadDto,
+} from './../dto/event.dto';
 import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
 import { JwtAuthGuard } from './../../auth/guards/jwt-auth.guard';
 import { EventEntity } from 'src/modules/event/domain/entities/event.entity';
@@ -47,7 +51,9 @@ export class EventController {
   }
 
   @Get('/paging')
-  async getAllEvent(@Query() query: PaginationEvent): Promise<EventEntity[]> {
+  async getAllEvent(
+    @Query() query: PaginationEvent,
+  ): Promise<{ events: EventPayloadDto[]; total: number }> {
     const { page, pageSize, ...rest } = query || {};
     return await this.eventService.getEventPaging(rest, {
       page,

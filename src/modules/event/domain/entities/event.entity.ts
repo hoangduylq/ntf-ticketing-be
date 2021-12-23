@@ -18,6 +18,7 @@ import { AutoMap } from '@automapper/classes';
 @Entity({ name: 'Event' })
 export class EventEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
+  @AutoMap()
   id!: string;
 
   @Column({ type: 'uuid' })
@@ -43,6 +44,7 @@ export class EventEntity extends BaseEntity {
   logoUrl?: string;
 
   @Column({ nullable: true, type: 'text' })
+  @AutoMap()
   bannerUrl?: string;
 
   @Column({ nullable: true, type: 'varchar' })
