@@ -35,19 +35,15 @@ export class OrderConsumer {
 
     // Generate Address
     const address = await this.tatumService.generateAddress(walletAddress, 2);
-    console.log('address: ', address);
 
     // Get privateKey
     const privateKey = await this.tatumService.generatePrivateKey(mnemonic, 2);
-    console.log('privateKey: ', privateKey);
 
     // Deplot NFT Smartcontact
     const txId = await this.tatumService.deployFlowNft(privateKey, address);
-    console.log('txId: ', txId);
 
     // Get smartcontractAddress
     const contractAddress = await this.tatumService.getContractAddress(txId);
-    console.log('contractAddress: ', contractAddress);
 
     // Upload metaData
     const url = await this.tatumService.uploadMetaData(
@@ -57,7 +53,6 @@ export class OrderConsumer {
       },
       address,
     );
-    console.log('ipfsHash', url);
 
     // Mint Nft
     const tokenNFT = await this.tatumService.mintNft(
@@ -66,7 +61,6 @@ export class OrderConsumer {
       contractAddress,
       privateKey,
     );
-    console.log(tokenNFT.txId);
 
     if (tokenNFT.txId) {
       const order = await this.orderRepository.findOne({ id });
@@ -91,15 +85,13 @@ export class OrderConsumer {
 
   // @OnQueueActive()
   // onActive(job: Job) {
-  //   console.log(
-  //     `Processing job ${job.id} of type ${job.name} with data ${job.data}...`,
+  // ng job ${job.id} of type ${job.name} with data ${job.data}...`,
   //   );
   // }
 
   // @OnQueueCompleted()
   // onComplete(job: Job, result: any) {
-  //   console.log(
-  //     `Completed job ${job.id} of type ${job.name}. Result: ${JSON.stringify(
+  // d job ${job.id} of type ${job.name}. Result: ${JSON.stringify(
   //       result,
   //     )}`,
   //   );
@@ -107,8 +99,7 @@ export class OrderConsumer {
 
   // @OnQueueFailed()
   // onError(job: Job, error: any) {
-  //   console.log(
-  //     `Failed job ${job.id} of type ${job.name}: ${error.message}`,
+  // ob ${job.id} of type ${job.name}: ${error.message}`,
   //     error.stack,
   //   );
   // }
