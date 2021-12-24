@@ -56,6 +56,7 @@ export class OrderEntity extends BaseEntity {
     enum: StatusEnum,
     default: StatusEnum.Progress,
   })
+  @AutoMap()
   status!: StatusEnum;
 
   @Column({ nullable: true, type: 'date' })

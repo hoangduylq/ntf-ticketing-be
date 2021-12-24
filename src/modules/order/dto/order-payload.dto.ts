@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { StatusEnum } from '../domain/enums/status.enum';
 
 export class EventDto {
   @AutoMap()
@@ -29,6 +30,9 @@ export class OrderPayloadDto {
 
   @AutoMap()
   amount: number;
+
+  @AutoMap()
+  status: StatusEnum;
 
   @AutoMap()
   tickets: string[];

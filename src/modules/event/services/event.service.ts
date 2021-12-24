@@ -23,6 +23,7 @@ export class EventService {
 
   async create(createEventDto: EventDto): Promise<EventEntity> {
     try {
+      createEventDto.availableTickets = createEventDto.totalTickets;
       const newEvent = this.eventRepository.create(createEventDto);
       await this.eventRepository.save(newEvent);
       return newEvent;
@@ -82,6 +83,7 @@ export class EventService {
   ): Promise<EventEntity> {
     try {
       const event = await this.getEventById(id);
+      console.log(event.status);
       event.status = status;
       const eventUpdated = this.eventRepository.save(event);
       return eventUpdated;

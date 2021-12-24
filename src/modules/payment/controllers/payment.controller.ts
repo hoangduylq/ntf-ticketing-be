@@ -1,4 +1,3 @@
-import { RolesGuard } from 'src/modules/auth/guards/roles.guard';
 import {
   Body,
   Controller,
@@ -21,7 +20,6 @@ import { BankService } from '../services/bank.service';
 import { WalletService } from '../services/wallet.service';
 
 import { JwtAuthGuard } from './../../auth/guards/jwt-auth.guard';
-import { Roles, Role } from 'src/modules/auth/decorator/role.decorator';
 
 @Controller('payment')
 @ApiTags('payment')
@@ -32,8 +30,7 @@ export class PaymentController {
   ) {}
 
   @Post('bank')
-  @Roles(Role.User)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async createBank(@Body() bankDto: BankDto) {
     try {
