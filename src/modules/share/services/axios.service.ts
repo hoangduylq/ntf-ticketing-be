@@ -3,10 +3,10 @@ import axios from 'axios';
 
 @Injectable()
 export class AxiosService {
-  axiosTatum = async (ENDPOINT, METHOD) => {
+  axiosTatum = async (endpoint: string, method: any) => {
     const options = {
-      url: `${process.env.TATUM_API_URL}${ENDPOINT}`,
-      method: METHOD,
+      url: `${process.env.TATUM_API_URL}/v3/${endpoint}`,
+      method: method,
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': `${process.env.TATUM_API_KEY}`,

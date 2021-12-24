@@ -26,57 +26,66 @@ export class OrderConsumer {
       id: string;
       amount: number;
       eventId: string;
+      userId: string;
       walletAddress: string;
       mnemonic: string;
     }>,
   ) {
-    try {
-      const { id, amount, eventId, walletAddress, mnemonic } = job.data;
-      // const currentBlock = await this.tatumService.getCurrentBlock();
-      const address = await this.tatumService.generateAddress(walletAddress, 2);
+    const { id, amount, eventId, userId, walletAddress, mnemonic } = job.data;
 
-      // get privateKey
-      // const privateKey = await this.tatumService.generatePrivateKey(
-      //   mnemonic,
-      //   2,
-      // );
-      // console.log(privateKey);
+    // Generate Address
+    const address = await this.tatumService.generateAddress(walletAddress, 2);
+    console.log('address: ', address);
 
-      //get InfoAccount by address
-      // const info = await this.tatumService.getInfoAccount(address);
-      // console.log(info);
-      // {
-      //   address: '0xb5b194d11c9824d6',
-      //   balance: 100000,
-      //   code: '',
-      //   contracts: {},
-      //   keys: [ [Object] ]
-      // }
+    // Get privateKey
+    const privateKey = await this.tatumService.generatePrivateKey(mnemonic, 2);
+    console.log('privateKey: ', privateKey);
 
-      // const generateToken = id + Math.random() * 100 + Math.random() * 100;
-      // if (generateToken) {
-      //   const order = await this.orderRepository.findOne({ id });
-      //   const ticketArr: string[] = order.tickets || [];
-      //   ticketArr.push(generateToken);
+    // Deplot NFT Smartcontact
+    const txId = await this.tatumService.deployFlowNft(privateKey, address);
+    console.log('txId: ', txId);
 
-      //   await this.orderRepository.update(
-      //     {
-      //       id: id,
-      //     },
-      //     {
-      //       tickets: ticketArr,
-      //       status:
-      //         ticketArr.length === amount
-      //           ? StatusEnum.Done
-      //           : StatusEnum.Progress,
-      //     },
-      //   );
+    // Get smartcontractAddress
+    const contractAddress = await this.tatumService.getContractAddress(txId);
+    console.log('contractAddress: ', contractAddress);
 
-      //   ticketArr.length === amount &&
-      //     (await this.eventService.updateAvaiableTickets(eventId, amount));
-      // }
-    } catch (error) {
-      console.log(error);
+    // Upload metaData
+    const url = await this.tatumService.uploadMetaData(
+      {
+        eventId,
+        userId,
+      },
+      address,
+    );
+    console.log('ipfsHash', url);
+
+    // Mint Nft
+    const tokenNFT = await this.tatumService.mintNft(
+      address,
+      url,
+      contractAddress,
+      privateKey,
+    );
+    console.log(tokenNFT.txId);
+
+    if (tokenNFT.txId) {
+      const order = await this.orderRepository.findOne({ id });
+      const ticketArr: string[] = order.tickets || [];
+      ticketArr.push(tokenNFT.txId);
+
+      await this.orderRepository.update(
+        {
+          id: id,
+        },
+        {
+          tickets: ticketArr,
+          status:
+            ticketArr.length === amount ? StatusEnum.Done : StatusEnum.Progress,
+        },
+      );
+
+      ticketArr.length === amount &&
+        (await this.eventService.updateAvaiableTickets(eventId, amount));
     }
   }
 

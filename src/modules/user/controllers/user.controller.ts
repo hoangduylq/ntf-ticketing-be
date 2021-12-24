@@ -72,8 +72,7 @@ export class UserController {
   }
 
   @Patch('')
-  @Roles(Role.User)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async updateUser(
     @Body() userUpdateDto: UserUpdateDto,

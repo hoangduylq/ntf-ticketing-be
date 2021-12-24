@@ -39,6 +39,7 @@ export class OrderService {
             id: id,
             amount,
             eventId,
+            userId,
             walletAddress,
             mnemonic,
           });
